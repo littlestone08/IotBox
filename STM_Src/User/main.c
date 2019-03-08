@@ -16,6 +16,7 @@
 #include "stm32f10x.h"                   //STM32器件寄存器定义头文件，必须包含
 #include "user_Config.h"                  //用户配置头文件，用于配置硬件连接资源,位于项目文件夹下
 #include "InitCPU.h"
+#include "test.h"
 
 
 
@@ -56,23 +57,26 @@ int main(void)
 {
 	InitCPU( );
 	
-	g_USART1_tx_buf[0] = 0x01;
-	g_USART1_tx_buf[1] = 0x02;
-	g_USART1_tx_buf[2] = 0x03;
-	g_USART1_tx_buf[3] = 0x04;
-	g_USART1_tx_buf[4] = 0x05;
-	g_USART1_tx_buf[5] = 0x06;
-	g_USART1_tx_buf[6] = 0x07;
-	
-	g_USART1_tx_wishtrans = 5;
-	USART1SendBuf( );
-	while(g_USART1_sending == 1);
-	g_USART1_tx_wishtrans = 6;
-	USART1SendBuf( );
+//	g_USART3_tx_buf[0] = 0x01;
+//	g_USART3_tx_buf[1] = 0x02;
+//	g_USART3_tx_buf[2] = 0x03;
+//	g_USART3_tx_buf[3] = 0x04;
+//	g_USART3_tx_buf[4] = 0x05;
+//	g_USART3_tx_buf[5] = 0x06;
+//	g_USART3_tx_buf[6] = 0x07;
+//	
+//	g_USART3_tx_wishtrans = 5;
+//	USART3SendBuf( );
+//	while(g_USART1_sending == 1);
+//	g_USART1_tx_wishtrans = 6;
+//	USART1SendBuf( );
 	while(1){	
-		USART2_LOOP();
-		USART1_LOOP();
-		USART3_LOOP();
+//		USART1_LOOP();
+//		USART2_LOOP();		
+//		USART3_LOOP();
+		
+		USART3_REDIRECT_USART2( );
+		USART2_REDIRECT_USART3( );		
 	};
 	
 }
