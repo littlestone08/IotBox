@@ -18,6 +18,7 @@
 #include "user_Config.h"                  //用户配置头文件，用于配置硬件连接资源,位于项目文件夹下
 #include "InitCPU.h"
 #include "test.h"
+#include "stdio.h"
 
 
 
@@ -31,10 +32,14 @@ OS_TID  id_led_key, id_uart_echo, id_task_uart_redirect;
 
 __task void tsk_blink_task( void ){
 	while(1){
+		static U32 nSecTick = 0;
 		os_dly_wait (1000);
+		printf("sec : %d\n", nSecTick++);
 		GPIO_SetBits(GPIOC, GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7);
 		os_dly_wait (1000);
+		printf("sec : %d\n", nSecTick++);
 		GPIO_ResetBits(GPIOC, GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7);
+		
 	}
 }
 
@@ -86,9 +91,7 @@ int main(void)
 	
 	os_sys_init (tsk_uart_redirect);
 	
-	while(1){		
-		
-	};
+
 	
 }
 
