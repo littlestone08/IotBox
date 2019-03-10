@@ -28,17 +28,17 @@
 ********************************************************************/
 
 
-OS_TID  id_led_key, id_uart_echo, id_task_uart_redirect;
+OS_TID  id_led_blink, id_key_detect, id_task_uart_redirect;
 
 __task void tsk_blink_task( void ){
 	while(1){
 		static U32 nSecTick = 0;
 		os_dly_wait (1000);
-		printf("sec : %d\n", nSecTick++);
-		GPIO_SetBits(GPIOC, GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7);
+		//printf("sec : %d\n", nSecTick++);
+		GPIO_SetBits(GPIOC, GPIO_Pin_7);
 		os_dly_wait (1000);
-		printf("sec : %d\n", nSecTick++);
-		GPIO_ResetBits(GPIOC, GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7);
+		//printf("sec : %d\n", nSecTick++);
+		GPIO_ResetBits(GPIOC, GPIO_Pin_7);
 		
 	}
 }
@@ -51,23 +51,26 @@ __task void tsk_uart_echo( void ){
 }
 
 
+
+
+__task void led_key( void ){
+	while(1)	KEY_Dec();		
+}
+//		USART1_LOOP();
+//		USART2_LOOP();		
+//		USART3_LOOP();
+
+
 __task void tsk_uart_redirect( void ){
 		id_task_uart_redirect = os_tsk_self( );
-		id_led_key = os_tsk_create(tsk_blink_task, 1);
-		
+		id_led_blink = os_tsk_create(tsk_blink_task, 1);
+		id_key_detect = os_tsk_create(led_key, 1);		
 	
 		while( 1 ){
 			USART3_REDIRECT_USART2( );
 			USART2_REDIRECT_USART3( );
 		}
 }
-
-__task void led_key( void ){
-	KEY_Dec();		
-}
-//		USART1_LOOP();
-//		USART2_LOOP();		
-//		USART3_LOOP();
 int main(void)
 {
 	InitCPU( );

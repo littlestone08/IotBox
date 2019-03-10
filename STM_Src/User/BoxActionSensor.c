@@ -1,6 +1,9 @@
 #include "stm32f10x.h"
 #include "BoxActionSensor.h"
-#include "KEYMACRO.h"
+#include "KEYMACRO_RTL.h"
+#include "stdbool.h"
+#include "rtl.h"
+#include "stdio.h"
 
 //GPIOD.1作为开关检测
 #define RCC_GPIO_SENSOR RCC_APB2Periph_GPIOD
@@ -70,15 +73,28 @@ void LED_KEY_Init(){
 
 void KEY_Dec(void)
 {
-	if(GPIO_ReadInputDataBit(GPIO_KEY4, S1_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS1_PIN); 	//按下S1时DS1熄灭
-	else  GPIO_SetBits(GPIO_LED8,DS1_PIN);
+//	if(GPIO_ReadInputDataBit(GPIO_KEY4, S1_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS1_PIN); 	//按下S1时DS1熄灭
+//	else  GPIO_SetBits(GPIO_LED8,DS1_PIN);
+//	
+//	if(GPIO_ReadInputDataBit(GPIO_KEY4, S2_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS2_PIN);	//按下S2时DS2熄灭
+//	else  GPIO_SetBits(GPIO_LED8,DS2_PIN);
+//	
+//	if(GPIO_ReadInputDataBit(GPIO_KEY4, S3_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS3_PIN);	//按下S3时DS3熄灭
+//	else  GPIO_SetBits(GPIO_LED8,DS3_PIN);
+//	
+//	if(GPIO_ReadInputDataBit(GPIO_KEY4, S4_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS4_PIN);	//按下S4时DS4熄灭
+//	else  GPIO_SetBits(GPIO_LED8,DS4_PIN);
+//	
+
+
+#define KEY_S2_DETERMINE_EXP() (GPIO_ReadInputDataBit(GPIO_KEY4, S2_PIN) == 0)
 	
-	if(GPIO_ReadInputDataBit(GPIO_KEY4, S2_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS2_PIN);	//按下S2时DS2熄灭
-	else  GPIO_SetBits(GPIO_LED8,DS2_PIN);
+
 	
-	if(GPIO_ReadInputDataBit(GPIO_KEY4, S3_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS3_PIN);	//按下S3时DS3熄灭
-	else  GPIO_SetBits(GPIO_LED8,DS3_PIN);
+#define TIMER_ROUTE()			
+#define KEY_DOWN_ACTION() printf("S2 DOWN\n")
+#define KEY_UP_ACTION()		printf("S2 UP\n")
+
 	
-	if(GPIO_ReadInputDataBit(GPIO_KEY4, S4_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS4_PIN);	//按下S4时DS4熄灭
-	else  GPIO_SetBits(GPIO_LED8,DS4_PIN);
+SCAN_KEY(KEY_S2_DETERMINE_EXP(), KEY_DOWN_ACTION(),KEY_UP_ACTION(), TIMER_ROUTE());
 }
