@@ -3,7 +3,7 @@
 
 //GPIOD.1作为开关检测
 #define RCC_GPIO_SENSOR RCC_APB2Periph_GPIOD
-#define RCC_SENSOR GPIOD
+#define GPIO_SENSOR GPIOD
 #define GPIO_SENDSOR_PIN GPIO_Pin_1
 
 void SensorSWInit(){
@@ -14,8 +14,9 @@ void SensorSWInit(){
   	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;				   
   	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   
-  	GPIO_Init(RCC_SENSOR, &GPIO_InitStructure);  						//相关的GPIO口初始化
-  	
+  	GPIO_Init(GPIO_SENSOR, &GPIO_InitStructure);  						//相关的GPIO口初始化
+	
+		GPIO_SetBits(GPIO_SENSOR, GPIO_SENDSOR_PIN);
 }
 
 
@@ -45,36 +46,38 @@ void LED_KEY_Init(){
 		#define S4_PIN                         GPIO_Pin_15							//S4使用的GPIO管脚	
 		
 		GPIO_InitTypeDef GPIO_InitStructure;
-  	RCC_APB2PeriphClockCmd(RCC_GPIO_LED8, ENABLE); 					//使能LED灯使用的GPIO时钟
+		
+  	RCC_APB2PeriphClockCmd(RCC_GPIO_LED8, ENABLE); 					
   	GPIO_InitStructure.GPIO_Pin = DS1_PIN|DS2_PIN|DS3_PIN|DS4_PIN|DS5_PIN|DS6_PIN|DS7_PIN|DS8_PIN; //使用PC0~PC7
-  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;				//GPIO工作在输出模式
+  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;				
   	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   
-  	GPIO_Init(GPIO_LED8, &GPIO_InitStructure);  						//相关的GPIO口初始化
-  	GPIO_SetBits(GPIO_LED8,DS1_PIN|DS2_PIN|DS3_PIN|DS4_PIN|DS5_PIN|DS6_PIN|DS7_PIN|DS8_PIN);//关闭所有的LED指示灯
+  	GPIO_Init(GPIO_LED8, &GPIO_InitStructure);  						
+  	GPIO_SetBits(GPIO_LED8,DS1_PIN|DS2_PIN|DS3_PIN|DS4_PIN|DS5_PIN|DS6_PIN|DS7_PIN|DS8_PIN);
 	
-	 /* 配置KEY按键使用的GPIO管脚模式，输出模式，灌电流驱动*/
-  	RCC_APB2PeriphClockCmd(RCC_GPIO_KEY4, ENABLE); 					//使能KEY按键使用的GPIO时钟
+	 
+  	RCC_APB2PeriphClockCmd(RCC_GPIO_KEY4, ENABLE); 					
   	GPIO_InitStructure.GPIO_Pin = S1_PIN|S2_PIN|S3_PIN|S4_PIN; //使用PB12~PB15
   	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;				    //GPIO工作在输入悬浮模式
   	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   
-  	GPIO_Init(GPIO_KEY4, &GPIO_InitStructure);  						//相关的GPIO口初始化
-  	GPIO_SetBits(GPIO_LED8,S1_PIN|S2_PIN|S3_PIN|S4_PIN);    //拉高对应GPIO口
+  	GPIO_Init(GPIO_KEY4, &GPIO_InitStructure);  						
+  	GPIO_SetBits(GPIO_LED8,S1_PIN|S2_PIN|S3_PIN|S4_PIN);    
+		
 }
 
 
 void KEY_Dec(void)
 {
-	if(GPIO_ReadInputDataBit(GPIO_KEY4, S1_PIN)==0) GPIO_SetBits(GPIO_LED8,DS1_PIN); 	//按下S1时DS1熄灭
-	else  GPIO_ResetBits(GPIO_LED8,DS1_PIN);
+	if(GPIO_ReadInputDataBit(GPIO_KEY4, S1_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS1_PIN); 	//按下S1时DS1熄灭
+	else  GPIO_SetBits(GPIO_LED8,DS1_PIN);
 	
-	if(GPIO_ReadInputDataBit(GPIO_KEY4, S2_PIN)==0) GPIO_SetBits(GPIO_LED8,DS2_PIN);	//按下S2时DS2熄灭
-	else  GPIO_ResetBits(GPIO_LED8,DS2_PIN);
+	if(GPIO_ReadInputDataBit(GPIO_KEY4, S2_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS2_PIN);	//按下S2时DS2熄灭
+	else  GPIO_SetBits(GPIO_LED8,DS2_PIN);
 	
-	if(GPIO_ReadInputDataBit(GPIO_KEY4, S3_PIN)==0) GPIO_SetBits(GPIO_LED8,DS3_PIN);	//按下S3时DS3熄灭
-	else  GPIO_ResetBits(GPIO_LED8,DS3_PIN);
+	if(GPIO_ReadInputDataBit(GPIO_KEY4, S3_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS3_PIN);	//按下S3时DS3熄灭
+	else  GPIO_SetBits(GPIO_LED8,DS3_PIN);
 	
-	if(GPIO_ReadInputDataBit(GPIO_KEY4, S4_PIN)==0) GPIO_SetBits(GPIO_LED8,DS4_PIN);	//按下S4时DS4熄灭
-	else  GPIO_ResetBits(GPIO_LED8,DS4_PIN);
+	if(GPIO_ReadInputDataBit(GPIO_KEY4, S4_PIN)==0) GPIO_ResetBits(GPIO_LED8,DS4_PIN);	//按下S4时DS4熄灭
+	else  GPIO_SetBits(GPIO_LED8,DS4_PIN);
 }
