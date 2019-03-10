@@ -1,5 +1,6 @@
 #include "stm32f10x.h"
 #include "BoxActionSensor.h"
+#include "KEYMACRO.h"
 
 //GPIOD.1作为开关检测
 #define RCC_GPIO_SENSOR RCC_APB2Periph_GPIOD
