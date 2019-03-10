@@ -201,7 +201,7 @@
             <GenPPlst>0</GenPPlst>
             <AdsCpuType>"Cortex-M3"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
-            <mOS>0</mOS>
+            <mOS>1</mOS>
             <uocRom>0</uocRom>
             <uocRam>0</uocRam>
             <hadIROM>1</hadIROM>
@@ -212,7 +212,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>3</RoSelD>
@@ -423,11 +423,6 @@
           <GroupName>User</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\main.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32f10x_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\stm32f10x_it.c</FilePath>
@@ -482,6 +477,11 @@
               <FileType>1</FileType>
               <FilePath>.\User\BoxActionSensor.c</FilePath>
             </File>
+            <File>
+              <FileName>rtx_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\rtx_main.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -506,6 +506,16 @@
               <FileName>misc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FWLib\src\misc.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>RTX</GroupName>
+          <Files>
+            <File>
+              <FileName>RTX_Conf_CM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\RTX\RTX_Conf_CM.c</FilePath>
             </File>
           </Files>
         </Group>
