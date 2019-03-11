@@ -88,10 +88,10 @@ void KEY_Dec(void)
 
 
 #define KEY_S2_DETERMINE_EXP() (GPIO_ReadInputDataBit(GPIO_KEY4, S2_PIN) == 0)
-	
+
 
 	
-#define TIMER_ROUTE()			
+#define TIMER_ROUTE()
 #define KEY_DOWN_ACTION() printf("S2 DOWN\n")
 #define KEY_UP_ACTION()		printf("S2 UP\n")
 
