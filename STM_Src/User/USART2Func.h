@@ -4,22 +4,27 @@
 #include "stdbool.h"
 
 
+#ifdef __cplusplus
+#define __EXTERN extern "C"
+#else
+#define __EXTERN extern
+#endif
 
 #define USART2_TX_BUF_SIZE 0x10
-extern uint8_t  g_USART2_tx_buf[USART2_TX_BUF_SIZE];
-extern uint8_t g_USART2_tx_wishtrans;
+__EXTERN uint8_t  g_USART2_tx_buf[USART2_TX_BUF_SIZE];
+__EXTERN uint8_t g_USART2_tx_wishtrans;
 
-extern uint8_t s_USART2_tx_index;
-extern bool g_USART2_sending;
+__EXTERN uint8_t s_USART2_tx_index;
+__EXTERN bool g_USART2_sending;
 
 
 
 //void USART2_Send(uint16_t value);
-void USART2SendBuf(void);
+__EXTERN void USART2SendBuf(void);
 
-void USART2_LOOP( void );
+__EXTERN void USART2_LOOP( void );
 
-void USART2_Config( void );
+__EXTERN void USART2_Config( void );
 #endif
 
 

@@ -478,11 +478,6 @@
               <FilePath>.\User\BoxActionSensor.c</FilePath>
             </File>
             <File>
-              <FileName>rtx_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\rtx_main.c</FilePath>
-            </File>
-            <File>
               <FileName>Retarget.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\Retarget.c</FilePath>
@@ -496,6 +491,11 @@
               <FileName>bsp.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtx_main.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\User\rtx_main.cpp</FilePath>
             </File>
           </Files>
         </Group>
