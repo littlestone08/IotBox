@@ -17,10 +17,6 @@
 #include <string.h>
 #include <stddef.h>
 
-extern "C"  {
-  extern void SER_Init (void);           /* Initialize Serial Interface       */
-}
-
 
 class Complex  {
   int     re_part;
@@ -93,7 +89,7 @@ namespace ADJ  {
 /*----------------------------------------------------------------------------
   Main Program
  *----------------------------------------------------------------------------*/
-int test (void)  {
+void test (void)  {
 
 
   printf ("Example: CppSamp - Operator overloading / friend functions.\n\n");
@@ -136,3 +132,4 @@ int test (void)  {
   printf( "\nEnd of Program.\n" );
 
 }
+

@@ -351,7 +351,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,HSE_VALUE=8000000</Define>
               <Undefine></Undefine>
-              <IncludePath>.\User;.\FWLib\inc;.\User\CQ</IncludePath>
+              <IncludePath>.\User;.\FWLib\inc;.\User\CQ;.\User\ToolCase</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -488,11 +488,6 @@
               <FilePath>.\User\Serial.c</FilePath>
             </File>
             <File>
-              <FileName>bsp.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\bsp.c</FilePath>
-            </File>
-            <File>
               <FileName>rtx_main.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\User\rtx_main.cpp</FilePath>
@@ -501,6 +496,16 @@
               <FileName>CppTest.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\User\CppTest.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>ToolCase.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\User\ToolCase\ToolCase.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>bsp.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\User\bsp.cpp</FilePath>
             </File>
           </Files>
         </Group>

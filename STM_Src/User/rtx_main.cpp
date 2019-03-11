@@ -1,34 +1,19 @@
-/********************************************************************
-//DMSTM-L型最小系统板板载的串口自发自收测试程序，波特率为9600
-//该程序用于测试板载的MAX232模块是否正常，将DB9头的2和3脚用跳线帽短路即可形成自发自收回路
-//首先将数据通过USART2发送出去，再自接收回路，如果收到数据正确，再发一个数据，再接收，如果正确表示正常
-//如果测试正常，板载的LED灯会闪烁三次
-//注意波特率要两端设置为一致,波特率更改在串口初始化配置函数中
-//程序采用ST官方外设固件库形式，版本为V3.50，外部晶振8.000MHZ
-//调试环境：Keil MDK V4.60
-//作者：www.avrgcc.com
-//时间：2013.04.19
-********************************************************************/
 
-/********************************************************************
-				包含头文件
-********************************************************************/
-#include "rtl.h"
-#include "stm32f10x.h"                   //STM32器件寄存器定义头文件，必须包含
-#include "user_Config.h"                  //用户配置头文件，用于配置硬件连接资源,位于项目文件夹下
+#include "bsp.h"
+#include "user_Config.h" 
 #include "InitCPU.h"
-#include "test.h"
 #include "stdio.h"
+#include "test.h"
+#include "ToolCase.h"
 
 
 
 
-/********************************************************************
-                      主函数
-********************************************************************/
+using namespace TOOLCASE;
 
 
-OS_TID  id_led_blink, id_key_detect, id_task_uart_redirect;
+__EXTERN CToolCase *pToolCase;
+
 
 __task void tsk_blink_task( void ){
 	while(1){
@@ -61,10 +46,27 @@ __task void led_key( void ){
 //		USART3_LOOP();
 
 
+
+__task void tool_check( void ){
+	while(1){
+		if (os_evt_wait_and(0x0001, 1000) == OS_R_EVT){
+			//case triggered(open or closed)
+			if (pToolCase != NULL){
+				if (pToolCase->getStatus( ) ==  tcsOpen){
+					printf("ToolCase Opened, I will Check The ToolList 5 times Per 10 Sec\n");
+				}
+				else if (pToolCase->getStatus( ) ==  tcsClose){
+					printf("ToolCase Closed, I will Check The ToolList 1 Time immediately\n");
+				}
+			}
+		}
+	}	
+}
 __task void tsk_uart_redirect( void ){
 		id_task_uart_redirect = os_tsk_self( );
 		id_led_blink = os_tsk_create(tsk_blink_task, 1);
 		id_key_detect = os_tsk_create(led_key, 1);		
+		id_task_tool_check = os_tsk_create(tool_check, 1);
 	
 		while( 1 ){
 			USART3_REDIRECT_USART2( );
@@ -73,6 +75,7 @@ __task void tsk_uart_redirect( void ){
 }
 
 extern int test (void);
+
 int main(void)
 {
 	InitCPU( );
@@ -95,7 +98,12 @@ int main(void)
 	printf("Hello, this is Info From C++\n");
 	
 	test();
-	
+	{
+	CToolCase ToolCase;	
+	pToolCase = &ToolCase;
+		
+	ToolCase.print_version();
+	}
 	os_sys_init (tsk_uart_redirect);
 
 }
