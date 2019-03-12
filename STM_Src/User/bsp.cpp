@@ -1,7 +1,7 @@
 #include "bsp.h"
 #include "ToolCase.h"
 
-OS_TID  id_led_blink, id_key_detect, id_task_uart_redirect, id_task_tool_check;
+OS_TID  id_dbg_coommand, id_key_detect, id_uart_paser, id_rfid_check;
 
 TOOLCASE::CToolCase *pToolCase = NULL;
 

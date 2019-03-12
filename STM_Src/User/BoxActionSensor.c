@@ -2,8 +2,8 @@
 #include "BoxActionSensor.h"
 #include "KEYMACRO_RTL.h"
 #include "stdbool.h"
-#include "rtl.h"
-#include "stdio.h"
+
+#include "bsp.h"
 
 //GPIOD.1作为开关检测
 #define RCC_GPIO_SENSOR RCC_APB2Periph_GPIOD
@@ -92,9 +92,11 @@ void KEY_Dec(void)
 
 
 #define TIMER_ROUTE()
-#define KEY_DOWN_ACTION() printf("S2 DOWN\n")
-#define KEY_UP_ACTION()		printf("S2 UP\n")
+#define KEY_DOWN_ACTION() 	(printf("S2 DOWN\n"), os_evt_set(0x0001, id_rfid_check), set_toolcase_status(1))
+
+#define KEY_UP_ACTION()			(printf("S2   UP\n"), os_evt_set(0x0001, id_rfid_check), set_toolcase_status(0))
 
 	
 SCAN_KEY(KEY_S2_DETERMINE_EXP(), KEY_DOWN_ACTION(),KEY_UP_ACTION(), TIMER_ROUTE());
+
 }

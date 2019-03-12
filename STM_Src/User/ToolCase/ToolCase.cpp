@@ -22,7 +22,12 @@ void CToolCase::setBoxStatus(const ToolCaseStatusDef value){
 	if (m_status != value){
 		//os_tmr_create(1000, 1); //trigger the timer after 1 sec
 		m_status = value;
-		os_evt_set(0x0001, id_task_tool_check);
+//		os_evt_set(0x0001, id_task_tool_check);		
+		
+		if (value == tcsOpen)
+			os_evt_set(0x0001, id_rfid_check);
+		else if (value == tcsClose)
+			os_evt_set(0x0002, id_rfid_check);
 	}
 };
 

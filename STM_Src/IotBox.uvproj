@@ -493,11 +493,6 @@
               <FilePath>.\User\rtx_main.cpp</FilePath>
             </File>
             <File>
-              <FileName>CppTest.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\User\CppTest.cpp</FilePath>
-            </File>
-            <File>
               <FileName>ToolCase.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\User\ToolCase\ToolCase.cpp</FilePath>

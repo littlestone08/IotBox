@@ -2,6 +2,8 @@
 #define _BSP_H_
 #include "rtl.h"
 #include "stm32f10x.h"   
+#include "rtl.h"
+#include "stdio.h"
 
 #ifdef __cplusplus
 #define __EXTERN extern "C"
@@ -11,7 +13,7 @@
 
 //using namespace TOOLCASE;
 
-__EXTERN OS_TID  id_led_blink, id_key_detect, id_task_uart_redirect, id_task_tool_check;
+__EXTERN OS_TID  id_dbg_coommand, id_uart_paser, id_key_detect, id_rfid_check;
 __EXTERN void set_toolcase_status(uint8_t value);
 
 
