@@ -3,10 +3,8 @@
 #include "CQ3.h"
 
 
-//由于是使用RS485，D/R使用GPIO来控制，所以使用TC中断，即数据发送完成后才发送下一个数据,
-//而不是使用RXE
 
-
+uint8_t	*g_USART3_tx_buf_ptr = 0;
 
 uint8_t  g_USART3_tx_buf[USART3_TX_BUF_SIZE] = {0xA6};
   
@@ -17,20 +15,6 @@ uint8_t s_USART3_tx_index = 0;
 bool g_USART3_sending = 0; 
 
 
-/*
-void USART3_Send(uint16_t value){
-  RS485CTR_SET();														//发送状态，CTR为高
-  USART_SendData(USART3, value); 			//将键值发送到从机
-  
-  //while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET); //等待发送完成		
-  //delay_ms(1); //如何使用TXE缓冲空标志， 需要延时，确实收发完成后才可以转成收模式
-  
-  while(USART_GetFlagStatus(USART3, USART_FLAG_TC ) == RESET); //等待发送完成		
-  USART_ClearFlag(USART3, USART_FLAG_TC);   
-  RS485CTR_CLR();																	//接收状态，CTR为低
-  USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);//使能接收中断  
-}
-*/
 
 
 
@@ -125,7 +109,7 @@ void USART3_IRQHandler(void)
   if(USART_GetITStatus(USART3, USART_IT_TC) != RESET)
   {   
     if (s_USART3_tx_index < g_USART3_tx_wishtrans)
-    {      
+    {
       //RS485CTR_SET();                                       //发送状态，CTR为高      
       USART_SendData(USART3, g_USART3_tx_buf[s_USART3_tx_index++]); 			//将键值发送到从机  
     }
@@ -174,7 +158,13 @@ void USART3_LOOP(){
 }
 
 //发送nCount个字节
-void USART3_send( uint8_t nCount){
-	g_USART3_tx_wishtrans = nCount;
-	USART3SendBuf( );
+void USART3_send( uint8_t nCount, uint8_t *ptr){
+	if ( g_USART3_sending == 0 ){
+		g_USART3_tx_buf_ptr = ptr;
+		s_USART3_tx_index = 0;
+		g_USART3_tx_wishtrans = nCount;
+		
+		USART3SendBuf( );
+	}
 }
+

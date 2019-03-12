@@ -5,6 +5,8 @@
 #include "bsp.h"
 #include "user_Config.h" 
 #include "test.h"
+#include "RF200_Drv.h"
+
 
 
 
@@ -81,6 +83,7 @@ __task void rfid_check( void ){
 					{						
 						for(uint8_t i = 0; i < 5; i++){
 							printf("CheckTool List: %d, status: %d\n", i, os_evt_get());
+							RFID_SendCmdFrame(SingleInventCMD);							
 							for(uint8_t j = 0; j < 10; j++){
 								os_dly_wait(1000);
 								if (pToolCase->getStatus( ) !=  tcsOpen) {
