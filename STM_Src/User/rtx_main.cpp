@@ -76,18 +76,24 @@ __task void rfid_check( void ){
 			//case triggered(open or closed)
 			if (pToolCase != NULL){
 				if (pToolCase->getStatus( ) ==  tcsOpen){
+					bool closed = false;
 					printf("ToolCase Opened, I will Check The ToolList 5 times Per 10 Sec\n");
 					{						
 						for(uint8_t i = 0; i < 5; i++){
 							printf("CheckTool List: %d, status: %d\n", i, os_evt_get());
-							os_dly_wait(10000);
-							if (pToolCase->getStatus( ) !=  tcsOpen){
-								printf("ToolCase Closed, Open Check Stop\n");
+							for(uint8_t j = 0; j < 10; j++){
+								os_dly_wait(1000);
+								if (pToolCase->getStatus( ) !=  tcsOpen) {
+									closed = true;
+									break;
+								}
+							}
+							if (closed){
+								printf("ToolCase Closed during OPENCHECKING\n");
 								break;
 							}
 						}
 					}
-					
 				}
 				else if (pToolCase->getStatus( ) ==  tcsClose){
 					printf("ToolCase Closed, I will Check The ToolList 1 Time immediately, , status: %d\n",  os_evt_get());
