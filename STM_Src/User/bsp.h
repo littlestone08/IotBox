@@ -12,7 +12,7 @@
 //using namespace TOOLCASE;
 
 __EXTERN OS_TID  id_led_blink, id_key_detect, id_task_uart_redirect, id_task_tool_check;
-
+__EXTERN void set_toolcase_status(uint8_t value);
 
 
 #endif

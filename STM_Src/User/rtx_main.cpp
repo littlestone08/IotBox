@@ -15,6 +15,7 @@ using namespace TOOLCASE;
 __EXTERN CToolCase *pToolCase;
 
 
+
 __task void tsk_blink_task( void ){
 	while(1){
 		static U32 nSecTick = 0;
@@ -49,7 +50,7 @@ __task void led_key( void ){
 
 __task void tool_check( void ){
 	while(1){
-		if (os_evt_wait_and(0x0001, 1000) == OS_R_EVT){
+		if (os_evt_wait_or(0x0001, 1000) == OS_R_EVT){
 			//case triggered(open or closed)
 			if (pToolCase != NULL){
 				if (pToolCase->getStatus( ) ==  tcsOpen){
@@ -71,6 +72,25 @@ __task void tsk_uart_redirect( void ){
 		while( 1 ){
 			USART3_REDIRECT_USART2( );
 			USART2_REDIRECT_USART3( );
+			
+			while(CQ1_COUNT( ) > 0){				
+				switch(CQ1(0)){
+					case 'o':
+					case 'O':
+						printf("Open\n");
+						set_toolcase_status(1);
+						break;
+					case 'c':
+					case 'C':
+						printf("Close\n");
+						set_toolcase_status(2);
+						break;		
+					default:
+						printf("Unkown Command\n");						
+				}
+				
+				CQ1_D1();				
+			}			
 		}
 }
 
@@ -93,18 +113,18 @@ int main(void)
 //	while(g_USART1_sending == 1);
 //	g_USART1_tx_wishtrans = 6;
 //	USART1SendBuf( );
+	
+	CToolCase ToolCase;	
+	pToolCase = &ToolCase;
+	ToolCase.print_version();
+
+	
 	LED_KEY_Init();
 	SensorSWInit( );	
 	printf("Hello, this is Info From C++\n");
 	
 	test();
-	{
-	CToolCase ToolCase;	
-	pToolCase = &ToolCase;
-		
-	ToolCase.print_version();
-	}
-	os_sys_init (tsk_uart_redirect);
+	os_sys_init(tsk_uart_redirect);
 
 }
 
