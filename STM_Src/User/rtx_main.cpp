@@ -6,6 +6,7 @@
 #include "user_Config.h" 
 #include "test.h"
 #include "RF200_Drv.h"
+#include "DataParser.h"
 
 
 
@@ -115,6 +116,7 @@ __task void tsk_uart_parser( void ){
 		while( 1 ){
 			//USART3_REDIRECT_USART2( );
 			//USART2_REDIRECT_USART3( );
+			Parser_RFID_Respond();
 		}
 }
 

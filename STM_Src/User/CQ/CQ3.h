@@ -5,7 +5,7 @@
 
 //_CQ3_SIZE大小必须为POWER(2,N)，以便进行快速取模
 
-#define _CQ3_SIZE 0x20
+#define _CQ3_SIZE 0x40
 
 #define CQ3_MOD_MASK (_CQ3_SIZE - 1)
 //#define CQ3_MOD_MASK 15
