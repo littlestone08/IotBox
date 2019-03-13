@@ -4,6 +4,12 @@
 #include <stdint.h>
 #include <vector>
 
+#ifdef __cplusplus
+#define __EXTERN extern "C"
+#else
+#define __EXTERN extern
+#endif
+
 namespace TOOLCASE{
 	
 
@@ -49,14 +55,16 @@ private:
 	typedef ToolVector_t::iterator 					ToolVectorItr;
 private:	
 	ToolVector_t m_Tools; 
-	uint8_t 			m_invalid_respond_cnt;
+	uint8_t 			m_invalid_cnt;
 public:
 	CTools();
 	~CTools();
 	void push(const uint8_t RSSI, uint16_t PC, uint8_t* EPC);
-	void clear(){ m_Tools.clear(); m_invalid_respond_cnt = 0;}
+	void push_error(){ m_invalid_cnt++; }
+	void clear(){ m_Tools.clear(); m_invalid_cnt = 0;}
+	uint8_t get_invalid_count(){ return m_invalid_cnt;}
 	uint8_t count(){return m_Tools.size();}
-  TOOL_t operator[](const uint8_t index);
+  TOOL_t operator[](const uint8_t index);	
 };
 
 
@@ -71,13 +79,16 @@ public:
 	void setBoxStatus(const ToolCaseStatusDef value);
 
 	uint8_t tool_count();
-	
+	CTools& get_tools(){ return m_tools;}
 public:
 	void print_version();
 private:
+	CTools						m_tools;
 	ToolCaseStatusDef m_status;
 	
 };
 
 }
+
+
 #endif
