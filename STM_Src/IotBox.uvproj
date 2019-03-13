@@ -468,11 +468,6 @@
               <FilePath>.\User\CQ\CQ3.c</FilePath>
             </File>
             <File>
-              <FileName>Test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\Test.c</FilePath>
-            </File>
-            <File>
               <FileName>BoxActionSensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\BoxActionSensor.c</FilePath>

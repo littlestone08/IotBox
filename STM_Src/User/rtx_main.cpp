@@ -113,10 +113,8 @@ __task void tsk_uart_parser( void ){
 		id_rfid_check = os_tsk_create(rfid_check, 1);
 	
 		while( 1 ){
-			USART3_REDIRECT_USART2( );
-			USART2_REDIRECT_USART3( );
-			
-		
+			//USART3_REDIRECT_USART2( );
+			//USART2_REDIRECT_USART3( );
 		}
 }
 

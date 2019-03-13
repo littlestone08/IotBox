@@ -108,10 +108,10 @@ void USART3_IRQHandler(void)
 {
   if(USART_GetITStatus(USART3, USART_IT_TC) != RESET)
   {   
-    if (s_USART3_tx_index < g_USART3_tx_wishtrans)
+    if ((s_USART3_tx_index < g_USART3_tx_wishtrans) && (g_USART3_tx_buf_ptr != 0))
     {
       //RS485CTR_SET();                                       //发送状态，CTR为高      
-      USART_SendData(USART3, g_USART3_tx_buf[s_USART3_tx_index++]); 			//将键值发送到从机  
+      USART_SendData(USART3, g_USART3_tx_buf_ptr[s_USART3_tx_index++]); 			//将键值发送到从机  
     }
     else
     {
@@ -119,6 +119,7 @@ void USART3_IRQHandler(void)
       //RS485CTR_CLR();																	      //接收状态，CTR为低            
       g_USART3_tx_wishtrans = s_USART3_tx_index = 0;
 			g_USART3_sending = 0;
+			g_USART3_tx_buf_ptr = 0;
     }
   }
   
