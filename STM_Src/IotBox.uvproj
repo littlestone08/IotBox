@@ -348,7 +348,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--exceptions</MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,HSE_VALUE=8000000</Define>
               <Undefine></Undefine>
               <IncludePath>.\User;.\FWLib\inc;.\User\CQ;.\User\ToolCase</IncludePath>
@@ -501,6 +501,16 @@
               <FileName>RF200_DRV.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\RF200_DRV.c</FilePath>
+            </File>
+            <File>
+              <FileName>README.TXT</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\README.TXT</FilePath>
+            </File>
+            <File>
+              <FileName>DataParser.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\User\DataParser.cpp</FilePath>
             </File>
           </Files>
         </Group>
