@@ -122,6 +122,8 @@ __task void tsk_uart_parser( void ){
 
 
 
+
+CToolCase ToolCase;	
 int main(void)
 {
 	InitCPU( );
@@ -140,7 +142,7 @@ int main(void)
 //	g_USART1_tx_wishtrans = 6;
 //	USART1SendBuf( );
 
-	CToolCase ToolCase;	
+		
 	pToolCase = &ToolCase;
 	ToolCase.print_version();
 
@@ -149,7 +151,7 @@ int main(void)
 	SensorSWInit( );	
 	printf("-----------Hello from  IotToolCase, good luck...-----------\n");
 	
-
+	pToolCase->dbg_commu_test();
 	os_sys_init(tsk_uart_parser);
 
 }

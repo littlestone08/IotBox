@@ -5,20 +5,10 @@
 
 
 
-
-
-
 namespace TOOLCASE{
+	
 CToolCase::CToolCase(){
-	uint8_t x = 0x15;
-	m_status = tcsUnkown;		
-	m_FrameGenToPC.Begin(g_USART2_tx_buf, USART2_TX_BUF_SIZE);
-	m_FrameGenToPC.Push(&x, 1);
-	m_FrameGenToPC.End(0x01, 0xFF);
-	
-	g_USART2_tx_wishtrans = m_FrameGenToPC.Size();	
-	USART2SendBuf( );
-	
+
 };
 
 CToolCase::~CToolCase(){
@@ -39,6 +29,7 @@ void CToolCase::setBoxStatus(const ToolCaseStatusDef value){
 	}
 };
 
+
 ToolCaseStatusDef CToolCase::getStatus(void){
 	return (m_status);
 };
@@ -47,7 +38,23 @@ void CToolCase::print_version(void){
 	printf("This is ToolBox version 0.1\n");
 }
 
+void CToolCase::dbg_commu_test()
+{
+	uint8_t x = 0x15;
+	m_status = tcsUnkown;		
+	m_FrameGenToPC.Begin(g_USART2_tx_buf, USART2_TX_BUF_SIZE);
+	m_FrameGenToPC.Push(&x, 1);
+	m_FrameGenToPC.End(0x01, 0xFF);
+	
+	g_USART2_tx_wishtrans = m_FrameGenToPC.Size();	
+	USART2SendBuf( );
+	
+}
 
+void CToolCase::report_tool_list()
+{
+
+}
 
 
 CTools::CTools(){};

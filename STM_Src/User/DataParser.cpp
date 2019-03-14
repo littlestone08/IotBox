@@ -89,8 +89,6 @@ BB 		  00 			07 		00 			01 			  01 				09 	 7E
 			CQ3_DN(CQ3_COUNT( ));
 		}
 		
-
-
 		#undef RFID_TYPE
 		#undef RFID_COMMAND
 		#undef RFID_FRAME_LEN

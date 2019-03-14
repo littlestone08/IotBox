@@ -100,6 +100,8 @@ public:
 
 	uint8_t tool_count();
 	CTools& get_tools(){ return m_tools;}
+	void dbg_commu_test();
+	void report_tool_list();
 public:
 	void print_version();
 private:
