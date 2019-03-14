@@ -120,7 +120,7 @@ __task void tsk_uart_parser( void ){
 		}
 }
 
-extern int test (void);
+
 
 int main(void)
 {
@@ -139,15 +139,15 @@ int main(void)
 //	while(g_USART1_sending == 1);
 //	g_USART1_tx_wishtrans = 6;
 //	USART1SendBuf( );
-	
+
 	CToolCase ToolCase;	
 	pToolCase = &ToolCase;
 	ToolCase.print_version();
 
-	
+
 	LED_KEY_Init();
 	SensorSWInit( );	
-	printf("-----------Hello from  Iot ToolCase, good luck...-----------\n");
+	printf("-----------Hello from  IotToolCase, good luck...-----------\n");
 	
 
 	os_sys_init(tsk_uart_parser);

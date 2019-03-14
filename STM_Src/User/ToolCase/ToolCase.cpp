@@ -10,7 +10,15 @@
 
 namespace TOOLCASE{
 CToolCase::CToolCase(){
+	uint8_t x = 0x15;
 	m_status = tcsUnkown;		
+	m_FrameGenToPC.Begin(g_USART2_tx_buf, USART2_TX_BUF_SIZE);
+	m_FrameGenToPC.Push(&x, 1);
+	m_FrameGenToPC.End(0x01, 0xFF);
+	
+	g_USART2_tx_wishtrans = m_FrameGenToPC.Size();	
+	USART2SendBuf( );
+	
 };
 
 CToolCase::~CToolCase(){
@@ -78,5 +86,64 @@ TOOL_t CTools::operator[](const uint8_t index){
 	
 	return item;
 };
+
+
+//======================帧形成=======================
+void CFrameGen::Begin(uint8_t *PtrBuf, const uint8_t MaxBufSize)
+{
+	m_PtrBufRef = PtrBuf;
+	m_MaxBufSize = MaxBufSize;
+	m_RearIndex = 0;
+	
+	m_PtrBufRef[m_RearIndex++] = 0xBB;
+	m_PtrBufRef[m_RearIndex++] = 0x00; //type 域占位
+	m_PtrBufRef[m_RearIndex++] = 0x00; //Cmd 域占位
+	m_PtrBufRef[m_RearIndex++] = 0x00; //PARAMLen(H) 域占位
+ 	m_PtrBufRef[m_RearIndex++] = 0x00; //PARAMLen(L) 域占位
+	m_Processing = true;
+};
+
+void CFrameGen::End(uint8_t Type_Value, uint8_t Command_Value)
+{
+	uint16_t Param_Len = m_RearIndex  + 2 - 7;
+	
+	if (m_Processing)
+	{
+		//补充TYPE、CMD域，校验域和帧尾
+		m_PtrBufRef[1] = Type_Value;
+		m_PtrBufRef[2] = Command_Value;
+		m_PtrBufRef[3] = Param_Len >> 8;
+		m_PtrBufRef[4] = Param_Len;
+		
+		{//补充校验域
+		uint8_t check_sum = Type_Value;
+		for(uint16_t i = 2; i <= m_RearIndex; i++)
+		{
+			check_sum += m_PtrBufRef[i];			
+		}
+		m_PtrBufRef[m_RearIndex++] = check_sum;
+		}
+		
+		m_PtrBufRef[m_RearIndex++] = 0x7E;
+		//处理完成
+		m_Processing = false;
+	}
+};
+
+bool CFrameGen::Push(uint8_t *PtrBuf, const uint8_t Count)
+{
+	bool Succ = false;
+	if (m_Processing)
+	{		
+		if (m_RearIndex + Count < m_MaxBufSize - 2 )
+		{//需要留出帧尾和校验字节两个位置
+			uint8_t i = 0;
+			while (i < Count)	m_PtrBufRef[m_RearIndex++] = PtrBuf[i++];
+			Succ = true;
+		}
+	}
+	return Succ;
+};
+
 
 }

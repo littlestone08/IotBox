@@ -5,6 +5,7 @@
 #include "stdio.h"
 #include "stm32f10x.h"   
 #include "USART3Func.h"
+#include "USART2Func.h"
 
 
 #ifdef __cplusplus

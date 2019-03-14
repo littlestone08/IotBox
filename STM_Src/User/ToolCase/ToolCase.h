@@ -69,6 +69,26 @@ public:
 
 
 
+
+
+//======================帧形成=======================
+class CFrameGen{
+public:
+	CFrameGen(){}
+	~CFrameGen(){}
+	void Begin(uint8_t *PtrBuf, const uint8_t MaxBufSize);
+	void End(uint8_t Type_Value, uint8_t Command_Value);
+	bool Push(uint8_t *PtrBuf, const uint8_t Count);
+	inline uint16_t Size(){return m_RearIndex;}
+	inline bool get_Processing(){return m_Processing;}	
+private:
+	uint8_t m_MaxBufSize;
+	uint16_t m_RearIndex;
+	uint8_t *m_PtrBufRef;	
+	bool		m_Processing;
+};
+
+
 //======================工具箱=======================
 
 class CToolCase {
@@ -85,8 +105,10 @@ public:
 private:
 	CTools						m_tools;
 	ToolCaseStatusDef m_status;
+	CFrameGen					m_FrameGenToPC;
 	
 };
+
 
 }
 
