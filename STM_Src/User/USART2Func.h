@@ -10,7 +10,7 @@
 #define __EXTERN extern
 #endif
 
-#define USART2_TX_BUF_SIZE 0x10
+#define USART2_TX_BUF_SIZE 0xFF
 __EXTERN uint8_t  g_USART2_tx_buf[USART2_TX_BUF_SIZE];
 __EXTERN uint8_t g_USART2_tx_wishtrans;
 

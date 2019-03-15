@@ -9,7 +9,12 @@
 #include "DataParser.h"
 
 
-
+/*
+BB 01 00 00 2F 00 03 CB 30 00 E2 00 00 1A 
+92 10 01 08 27 40 4B A6 C3 30 00 E2 00 00 
+1A 92 10 01 36 27 30 65 90 C0 30 00 E2 00 
+00 1A 92 10 01 51 27 30 7F 2B 87 7E 
+*/
 
 using namespace TOOLCASE;
 
@@ -84,9 +89,10 @@ __task void rfid_check( void ){
 					{						
 						for(uint8_t i = 0; i < 5; i++){
 							printf("CheckTool List: %d, status: %d\n", i, os_evt_get());
-							RFID_SendCmdFrame(SingleInventCMD);							
+							pToolCase->refresh_tools( );							
+							pToolCase->report_tool_list( );
 							for(uint8_t j = 0; j < 10; j++){
-								os_dly_wait(1000);
+								os_dly_wait(1000);								
 								if (pToolCase->getStatus( ) !=  tcsOpen) {
 									closed = true;
 									break;
