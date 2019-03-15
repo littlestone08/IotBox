@@ -15,15 +15,20 @@ namespace TOOLCASE{
 
 typedef enum {tcsUnkown = 0, tcsOpen, tcsClose} ToolCaseStatusDef;
 
+//仅供上报给网络端使用
+typedef enum {ccInfo = 1} CmdCode;
+typedef enum  {itToolList = 0x00, itTest = 0xFF} InfoType;
 
 
-
+#pragma push
+#pragma pack(1)
 typedef struct {	
 	uint8_t RSSI;
 	uint16_t 	PC;
 	uint8_t 	EPC[12];	
 } TOOL_t;
 //======================工具列表=======================
+#pragma pop
 class CTools{
 private:
 	typedef struct {	
@@ -32,10 +37,11 @@ private:
 		uint16_t 	PC;
 		uint8_t 	EPC[12];	
 				
-		void SetValue(const uint16_t PC_value, const uint8_t *EPC_value){
+		void SetValue(const uint8_t RSSI, const uint16_t PC_value, const uint8_t *EPC_value){
 			for(uint8_t i = 0; i < 12; i++)	EPC[i] = EPC_value[i];
 			PC = PC_value;
-			RSSI_SigmaCount = RSSI_Sigma = 0;
+			RSSI_Sigma = RSSI;
+			RSSI_SigmaCount = 1;
 		}
 		
 		bool Same(const uint16_t PC_value, const uint8_t *EPC_value){
@@ -76,8 +82,8 @@ class CFrameGen{
 public:
 	CFrameGen(){}
 	~CFrameGen(){}
-	void Begin(uint8_t *PtrBuf, const uint8_t MaxBufSize);
-	void End(uint8_t Type_Value, uint8_t Command_Value);
+	bool Begin(uint8_t *PtrBuf, const uint8_t MaxBufSize);
+	void End(CmdCode cmd_code, uint8_t info_type);
 	bool Push(uint8_t *PtrBuf, const uint8_t Count);
 	inline uint16_t Size(){return m_RearIndex;}
 	inline bool get_Processing(){return m_Processing;}	
@@ -102,6 +108,7 @@ public:
 	CTools& get_tools(){ return m_tools;}
 	void dbg_commu_test();
 	void report_tool_list();
+	void refresh_tools();
 public:
 	void print_version();
 private:

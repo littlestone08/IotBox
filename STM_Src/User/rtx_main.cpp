@@ -84,9 +84,10 @@ __task void rfid_check( void ){
 					{						
 						for(uint8_t i = 0; i < 5; i++){
 							printf("CheckTool List: %d, status: %d\n", i, os_evt_get());
-							RFID_SendCmdFrame(SingleInventCMD);							
+							pToolCase->refresh_tools( );							
+							pToolCase->report_tool_list( );
 							for(uint8_t j = 0; j < 10; j++){
-								os_dly_wait(1000);
+								os_dly_wait(1000);								
 								if (pToolCase->getStatus( ) !=  tcsOpen) {
 									closed = true;
 									break;

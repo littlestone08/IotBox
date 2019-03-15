@@ -64,7 +64,7 @@ BB 		  00 			07 		00 			01 			  01 				09 	 7E
 							break;
 						case FRAME_RES://下位机给上位机的响应
 							break;
-						case FRAME_ERROR://下位机给上位机的错误 帧
+						case FRAME_ERROR://下位机给上位机的错误帧
 							if (param_len == 0x0001)
 							{
 								#ifdef _PROCESS_ERROR_CODE
