@@ -152,6 +152,8 @@ procedure RcvRawFromDev_CBF(MessageID: LongInt; DevId: PWideChar; pData: PByte;
   DataLen: Integer); stdcall;
 
 implementation
+uses
+  u_frmTools;
 
 {$R *.dfm}
 
@@ -446,11 +448,14 @@ end;
 
 procedure TFrmUsrCloudDllDemo.Log(strMsg: string);
 begin
-  RichEdit1.Lines.Add('------' + FormatDateTime('hh:mm:ss', Now) + '------');
-  RichEdit1.Lines.Add(strMsg);
-  RichEdit1.Lines.Add('');
-  if CheckBox1.Checked then
-    PostMessage(RichEdit1.Handle, WM_VSCROLL, SB_BOTTOM, 0);
+  if Not (csDestroying in ComponentState) then
+  begin
+    RichEdit1.Lines.Add('------' + FormatDateTime('hh:mm:ss', Now) + '------');
+    RichEdit1.Lines.Add(strMsg);
+    RichEdit1.Lines.Add('');
+    if CheckBox1.Checked then
+      PostMessage(RichEdit1.Handle, WM_VSCROLL, SB_BOTTOM, 0);
+  end;
 end;
 
 /// //////////////////////////////////////////////////////////////////////////////
@@ -533,6 +538,7 @@ begin
   FrmUsrCloudDllDemo.Log('【接收数据流事件】' + Chr(13) + Chr(10) + 'MessageID:%d' +
     Chr(13) + Chr(10) + '设备ID:%s' + Chr(13) + Chr(10) + '内容(HEX):%s',
     [MessageID, WideCharToString(DevId), vsHexData]);
+  frmTools.Usr_RcvRawFromDev_CBF(MessageID, DevId, pData, DataLen);
 end;
 
 (* 接收 数据点变化推送
@@ -606,6 +612,7 @@ begin
   FrmUsrCloudDllDemo.Log('【设备上下线推送事件】' + Chr(13) + Chr(10) + 'MessageID:%d' +
     Chr(13) + Chr(10) + '设备ID:%s' + Chr(13) + Chr(10) + 'JSON数据:%s',
     [MessageID, WideCharToString(DevId), WideCharToString(JsonStr)]);
+  frmTools.Usr_Dev_StatusPush_CBF(MessageID, DevId, JsonStr);
 end;
 
 (* 接收 设备报警推送
@@ -646,6 +653,7 @@ begin
   ShellExecute(Application.Handle, nil, 'http://cloud.usr.cn/sdk/dll/', nil,
     nil, SW_SHOWNORMAL);
 end;
+
 
 end.
 

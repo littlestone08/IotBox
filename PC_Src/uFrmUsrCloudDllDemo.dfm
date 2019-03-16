@@ -1,7 +1,7 @@
 object FrmUsrCloudDllDemo: TFrmUsrCloudDllDemo
   Left = 0
   Top = 0
-  Caption = 'UsrCloud.dll Demo'
+  Caption = #35843#35797#30028#38754
   ClientHeight = 711
   ClientWidth = 1109
   Color = clBtnFace
@@ -59,6 +59,7 @@ object FrmUsrCloudDllDemo: TFrmUsrCloudDllDemo
       ScrollBars = ssVertical
       TabOrder = 1
       Zoom = 100
+      ExplicitTop = 52
     end
     object Panel3: TPanel
       Left = 1
@@ -243,7 +244,7 @@ object FrmUsrCloudDllDemo: TFrmUsrCloudDllDemo
       Top = 183
       Width = 519
       Height = 527
-      ActivePage = TabSheetParsed
+      ActivePage = TabSheetRaw
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
