@@ -13,6 +13,31 @@ uses
 
 type
 
+{
+select NULL PID, ID, Name, NULL RSSI, NULL PC, NULL EPC, NULL InBox from tbToolBox
+union
+select BID PID, ID, Name, RSSI, PC, EPC, InBox from tbTools
+}
+
+{
+select  a.id    as ToolBoxID,
+	      a.Iden  as ToolBoxIden,
+        a.Name  as ToolBox,
+        a.Status as Status,
+        a.IsOnline as IsOnline,
+        a.LastTimeStamp as LastTimeStamp,
+        b.id    as ToolID,
+	      b.Iden  as ToolIden,
+        b.Name  as ToolName,
+        b.PC,
+        b.RSSI,
+        b.EPC,
+        b.InBox,
+        b.BID
+from tbToolBox a
+    left join tbTools b  on b.bid = a.id
+
+}
   TLeavePageRec = Record
     Caption: String;
     HrefID: Integer;
@@ -29,9 +54,9 @@ type
     FDQuery1: TFDQuery;
     DataSource1: TDataSource;
     FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
-    MemTableEh1: TMemTableEh;
     DataSetDriverEh1: TDataSetDriverEh;
     FDQuery4: TFDQuery;
+    MemTableEh1: TMemTableEh;
   private
     { Private declarations }
   public
@@ -159,7 +184,7 @@ begin
       begin
         ASQL:= 'CREATE TABLE ' + CONST_TB_TOOLBOX + ' ('    +
                               CONST_FIELDNAME_ID +' integer PRIMARY KEY,'     +
-                              CONST_FIELDNAME_IDEN + ' string(20), '       +
+                              CONST_FIELDNAME_IDEN + ' string(24), '       +
                               CONST_FIELDNAME_NAME    + ' string(20), '       +
                               CONST_FIELDNAME_STATUS  + ' TINYINT, '      +     //0:unkown, 1: ffline 2:opend 3 closed
                               CONST_FIELDNAME_BATTERY + ' TINYINT, '      +     //0~100 °Ù·Ö±È

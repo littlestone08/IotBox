@@ -17,10 +17,19 @@ type
     Button2: TButton;
     Memo1: TMemo;
     DBGridEh1: TDBGridEh;
+    CheckBox1: TCheckBox;
+    CheckBox2: TCheckBox;
+    CheckBox3: TCheckBox;
+    CheckBox4: TCheckBox;
+    CheckBox5: TCheckBox;
+    CheckBox6: TCheckBox;
+    CheckBox7: TCheckBox;
+    CheckBox8: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure CheckBox1Click(Sender: TObject);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -96,19 +105,27 @@ begin
   FrmUsrCloudDllDemo.Show;
 end;
 
+procedure TfrmTools.CheckBox1Click(Sender: TObject);
+begin
+  if sender is TCheckBox then
+  begin
+    dmDatabase.MemTableEh1.FieldByName(TCheckBox(Sender).Caption).Visible:= TCheckBox(Sender).Checked;
+  end;
+end;
+
 procedure TfrmTools.FormCreate(Sender: TObject);
 begin
   DBGridEh1.DataSource.DataSet.Open;
-  With self.DBGridEh1.DataGrouping do
-  begin
-
-    Active:= True;
-    GroupPanelVisible:= True;
-    With GroupLevels.Add do
-    begin
-      Column:= self.DBGridEh1.FindFieldColumn('ID');
-    end;
-  end;
+//  With self.DBGridEh1.DataGrouping do
+//  begin
+//
+//    Active:= True;
+//    GroupPanelVisible:= True;
+//    With GroupLevels.Add do
+//    begin
+//      Column:= self.DBGridEh1.FindFieldColumn('ID');
+//    end;
+//  end;
 //  self.DBGridEh1.DataSource.DataSet.FieldByName('ToolBox').DisplayLabel:= '工具箱';
 //select  a.id    as ToolBoxID,
 //        a.Name  as ToolBox,
@@ -118,64 +135,64 @@ begin
 //        b.PC,
 //        b.RSSI,
 //        b.EPC,b.InBox
-  With DBGridEh1.DataSource.DataSet do
-  begin
-    With FieldByName('ToolBox') do
-    begin
-      DisplayLabel:= '工具箱';
-      DisplayWidth:= 10;
-    end;
-    With FieldByName('ToolBoxIden') do
-    begin
-      DisplayLabel:= '工具箱编码';
-      DisplayWidth:= 10;
-    end;
-    With FieldByName('Status') do
-    begin
-      DisplayLabel:= '状态';
-      DisplayWidth:= 10;
-    end;
-
-    With FieldByName('IsOnline') do
-    begin
-      DisplayLabel:= '联网';
-      DisplayWidth:= 10;
-    end;
-
-    With FieldByName('LastTimeStamp') do
-    begin
-      DisplayLabel:= '上次通信时间';
-      DisplayWidth:= 10;
-    end;
-
-    With FieldByName('ToolIden') do
-    begin
-      DisplayLabel:= '工具编码';
-      DisplayWidth:= 10;
-    end;
-
-    With FieldByName('ToolName') do
-    begin
-      DisplayLabel:= '工具';
-      DisplayWidth:= 10;
-    end;
-
-    With FieldByName('InBox') do
-    begin
-      DisplayLabel:= '未使用';
-      DisplayWidth:= 10;
-    end;
-
-
-
-    With FieldByName('PC') do
-    begin
+//  With DBGridEh1.DataSource.DataSet do
+//  begin
+//    With FieldByName('ToolBox') do
+//    begin
+//      DisplayLabel:= '工具箱';
+//      DisplayWidth:= 10;
+//    end;
+//    With FieldByName('ToolBoxIden') do
+//    begin
+//      DisplayLabel:= '工具箱编码';
+//      DisplayWidth:= 10;
+//    end;
+//    With FieldByName('Status') do
+//    begin
+//      DisplayLabel:= '状态';
+//      DisplayWidth:= 10;
+//    end;
+//
+//    With FieldByName('IsOnline') do
+//    begin
+//      DisplayLabel:= '联网';
+//      DisplayWidth:= 10;
+//    end;
+//
+//    With FieldByName('LastTimeStamp') do
+//    begin
+//      DisplayLabel:= '上次通信时间';
+//      DisplayWidth:= 10;
+//    end;
+//
+//    With FieldByName('ToolIden') do
+//    begin
+//      DisplayLabel:= '工具编码';
+//      DisplayWidth:= 10;
+//    end;
+//
+//    With FieldByName('ToolName') do
+//    begin
+//      DisplayLabel:= '工具';
+//      DisplayWidth:= 10;
+//    end;
+//
+//    With FieldByName('InBox') do
+//    begin
 //      DisplayLabel:= '未使用';
-      DisplayWidth:= 10;
-    end;
-    FieldByName('ToolBoxID').Visible:= False;
-    FieldByName('ToolID').Visible:= False;
-  end;
+//      DisplayWidth:= 10;
+//    end;
+//
+//
+//
+//    With FieldByName('PC') do
+//    begin
+////      DisplayLabel:= '未使用';
+//      DisplayWidth:= 10;
+//    end;
+//    FieldByName('ToolBoxID').Visible:= False;
+//    FieldByName('ToolID').Visible:= False;
+//  end;
 end;
 
 procedure TfrmTools.FormDestroy(Sender: TObject);
@@ -231,7 +248,7 @@ begin
           dmDatabase.db_PushBoxToolList(DevId, Boxstatus, ToolInfoPtr, ToolCount);
           for i := 0 to ToolCount - 1 do
           begin
-            _Log(Format('第 %d 个: %s', [i + 1, PlumUtils.Buf2Hex(@ToolInfoPtr.EPC, 12)]));
+            _Log(Format('第 %d 个: %s', [i + 1,ToolInfoPtr.EPC_String]));
             Inc(ToolInfoPtr);
           end;
         end

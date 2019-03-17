@@ -73,15 +73,118 @@ object frmTools: TfrmTools
     TabOrder = 3
   end
   object DBGridEh1: TDBGridEh
-    Left = 304
+    Left = 313
     Top = 32
-    Width = 777
+    Width = 592
     Height = 233
     Anchors = [akLeft, akTop, akRight, akBottom]
     DataSource = dmDatabase.DataSource1
     DynProps = <>
+    GridLineParams.VertEmptySpaceStyle = dessNonEh
+    IndicatorOptions = []
+    IndicatorParams.HorzLines = True
+    Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+    OptionsEh = [dghFixed3D, dghHighlightFocus, dghClearSelection, dghDialogFind, dghColumnResize, dghColumnMove]
+    RowHeight = 4
+    RowLines = 1
     TabOrder = 4
     object RowDetailData: TRowDetailPanelControlEh
     end
+  end
+  object CheckBox1: TCheckBox
+    Left = 976
+    Top = 40
+    Width = 97
+    Height = 17
+    Anchors = [akTop, akRight]
+    Caption = 'ID'
+    Checked = True
+    State = cbChecked
+    TabOrder = 5
+    OnClick = CheckBox1Click
+  end
+  object CheckBox2: TCheckBox
+    Left = 976
+    Top = 63
+    Width = 97
+    Height = 17
+    Anchors = [akTop, akRight]
+    Caption = 'PID'
+    Checked = True
+    State = cbChecked
+    TabOrder = 6
+    OnClick = CheckBox1Click
+  end
+  object CheckBox3: TCheckBox
+    Left = 976
+    Top = 86
+    Width = 97
+    Height = 17
+    Anchors = [akTop, akRight]
+    Caption = 'RSSI'
+    Checked = True
+    State = cbChecked
+    TabOrder = 7
+    OnClick = CheckBox1Click
+  end
+  object CheckBox4: TCheckBox
+    Left = 976
+    Top = 109
+    Width = 97
+    Height = 17
+    Anchors = [akTop, akRight]
+    Caption = 'PC'
+    Checked = True
+    State = cbChecked
+    TabOrder = 8
+    OnClick = CheckBox1Click
+  end
+  object CheckBox5: TCheckBox
+    Left = 976
+    Top = 132
+    Width = 97
+    Height = 17
+    Anchors = [akTop, akRight]
+    Caption = 'EPC'
+    Checked = True
+    State = cbChecked
+    TabOrder = 9
+    OnClick = CheckBox1Click
+  end
+  object CheckBox6: TCheckBox
+    Left = 976
+    Top = 155
+    Width = 97
+    Height = 17
+    Anchors = [akTop, akRight]
+    Caption = 'BOXID'
+    Checked = True
+    State = cbChecked
+    TabOrder = 10
+    OnClick = CheckBox1Click
+  end
+  object CheckBox7: TCheckBox
+    Left = 976
+    Top = 178
+    Width = 97
+    Height = 17
+    Anchors = [akTop, akRight]
+    Caption = 'LastTime'
+    Checked = True
+    State = cbChecked
+    TabOrder = 11
+    OnClick = CheckBox1Click
+  end
+  object CheckBox8: TCheckBox
+    Left = 976
+    Top = 201
+    Width = 97
+    Height = 17
+    Anchors = [akTop, akRight]
+    Caption = 'Online'
+    Checked = True
+    State = cbChecked
+    TabOrder = 12
+    OnClick = CheckBox1Click
   end
 end
