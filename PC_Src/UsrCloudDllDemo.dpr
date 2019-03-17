@@ -6,7 +6,6 @@ uses
   uUsrCloud in 'uUsrCloud.pas',
   u_DMDatabase in 'u_DMDatabase.pas' {dmDatabase: TDataModule},
   u_frmTools in 'u_frmTools.pas' {frmTools},
-  PlumUtils in 'D:\WORK170908\PlumComm\PlumUtils.pas',
   uCommonDef in 'uCommonDef.pas';
 
 {$R *.res}

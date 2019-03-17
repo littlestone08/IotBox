@@ -3,7 +3,7 @@ object frmTools: TfrmTools
   Top = 0
   Caption = #24037#20855#31665
   ClientHeight = 635
-  ClientWidth = 1098
+  ClientWidth = 1080
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -14,7 +14,7 @@ object frmTools: TfrmTools
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   DesignSize = (
-    1098
+    1080
     635)
   PixelsPerInch = 96
   TextHeight = 13
@@ -58,7 +58,7 @@ object frmTools: TfrmTools
   object Memo1: TMemo
     Left = 8
     Top = 285
-    Width = 1082
+    Width = 1064
     Height = 342
     Anchors = [akLeft, akTop, akRight, akBottom]
     Font.Charset = ANSI_CHARSET
@@ -71,120 +71,34 @@ object frmTools: TfrmTools
     ParentFont = False
     ScrollBars = ssBoth
     TabOrder = 3
+    ExplicitWidth = 1082
   end
-  object DBGridEh1: TDBGridEh
-    Left = 313
+  object DBGrid1: TDBGrid
+    Left = 312
     Top = 32
-    Width = 592
-    Height = 233
+    Width = 760
+    Height = 81
     Anchors = [akLeft, akTop, akRight, akBottom]
-    DataSource = dmDatabase.DataSource1
-    DynProps = <>
-    GridLineParams.VertEmptySpaceStyle = dessNonEh
-    IndicatorOptions = []
-    IndicatorParams.HorzLines = True
-    Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
-    OptionsEh = [dghFixed3D, dghHighlightFocus, dghClearSelection, dghDialogFind, dghColumnResize, dghColumnMove]
-    RowHeight = 4
-    RowLines = 1
+    DataSource = dmDatabase.dsBoxes
     TabOrder = 4
-    object RowDetailData: TRowDetailPanelControlEh
-    end
+    TitleFont.Charset = ANSI_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -13
+    TitleFont.Name = #23435#20307
+    TitleFont.Style = []
   end
-  object CheckBox1: TCheckBox
-    Left = 976
-    Top = 40
-    Width = 97
-    Height = 17
-    Anchors = [akTop, akRight]
-    Caption = 'ID'
-    Checked = True
-    State = cbChecked
+  object DBGrid2: TDBGrid
+    Left = 312
+    Top = 119
+    Width = 760
+    Height = 146
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    DataSource = dmDatabase.dsTools
     TabOrder = 5
-    OnClick = CheckBox1Click
-  end
-  object CheckBox2: TCheckBox
-    Left = 976
-    Top = 63
-    Width = 97
-    Height = 17
-    Anchors = [akTop, akRight]
-    Caption = 'PID'
-    Checked = True
-    State = cbChecked
-    TabOrder = 6
-    OnClick = CheckBox1Click
-  end
-  object CheckBox3: TCheckBox
-    Left = 976
-    Top = 86
-    Width = 97
-    Height = 17
-    Anchors = [akTop, akRight]
-    Caption = 'RSSI'
-    Checked = True
-    State = cbChecked
-    TabOrder = 7
-    OnClick = CheckBox1Click
-  end
-  object CheckBox4: TCheckBox
-    Left = 976
-    Top = 109
-    Width = 97
-    Height = 17
-    Anchors = [akTop, akRight]
-    Caption = 'PC'
-    Checked = True
-    State = cbChecked
-    TabOrder = 8
-    OnClick = CheckBox1Click
-  end
-  object CheckBox5: TCheckBox
-    Left = 976
-    Top = 132
-    Width = 97
-    Height = 17
-    Anchors = [akTop, akRight]
-    Caption = 'EPC'
-    Checked = True
-    State = cbChecked
-    TabOrder = 9
-    OnClick = CheckBox1Click
-  end
-  object CheckBox6: TCheckBox
-    Left = 976
-    Top = 155
-    Width = 97
-    Height = 17
-    Anchors = [akTop, akRight]
-    Caption = 'BOXID'
-    Checked = True
-    State = cbChecked
-    TabOrder = 10
-    OnClick = CheckBox1Click
-  end
-  object CheckBox7: TCheckBox
-    Left = 976
-    Top = 178
-    Width = 97
-    Height = 17
-    Anchors = [akTop, akRight]
-    Caption = 'LastTime'
-    Checked = True
-    State = cbChecked
-    TabOrder = 11
-    OnClick = CheckBox1Click
-  end
-  object CheckBox8: TCheckBox
-    Left = 976
-    Top = 201
-    Width = 97
-    Height = 17
-    Anchors = [akTop, akRight]
-    Caption = 'Online'
-    Checked = True
-    State = cbChecked
-    TabOrder = 12
-    OnClick = CheckBox1Click
+    TitleFont.Charset = ANSI_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -13
+    TitleFont.Name = #23435#20307
+    TitleFont.Style = []
   end
 end

@@ -5,8 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, u_DMDatabase,
-  Data.DB, Vcl.Grids, Vcl.DBGrids, DBGridEhGrouping, ToolCtrlsEh,
-  DBGridEhToolCtrls, DynVarsEh, EhLibVCL, GridsEh, DBAxisGridsEh, DBGridEh, uFrmUsrCloudDllDemo,
+  Data.DB, Vcl.Grids, Vcl.DBGrids,  uFrmUsrCloudDllDemo,
   PlumUtils, uCommonDef;
 
 type
@@ -16,15 +15,8 @@ type
     TreeView1: TTreeView;
     Button2: TButton;
     Memo1: TMemo;
-    DBGridEh1: TDBGridEh;
-    CheckBox1: TCheckBox;
-    CheckBox2: TCheckBox;
-    CheckBox3: TCheckBox;
-    CheckBox4: TCheckBox;
-    CheckBox5: TCheckBox;
-    CheckBox6: TCheckBox;
-    CheckBox7: TCheckBox;
-    CheckBox8: TCheckBox;
+    DBGrid1: TDBGrid;
+    DBGrid2: TDBGrid;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -107,15 +99,16 @@ end;
 
 procedure TfrmTools.CheckBox1Click(Sender: TObject);
 begin
-  if sender is TCheckBox then
-  begin
-    dmDatabase.MemTableEh1.FieldByName(TCheckBox(Sender).Caption).Visible:= TCheckBox(Sender).Checked;
-  end;
+//  if sender is TCheckBox then
+//  begin
+//    dmDatabase.MemTableEh1.FieldByName(TCheckBox(Sender).Caption).Visible:= TCheckBox(Sender).Checked;
+//  end;
 end;
 
 procedure TfrmTools.FormCreate(Sender: TObject);
 begin
-  DBGridEh1.DataSource.DataSet.Open;
+  DBGrid1.DataSource.DataSet.Open;
+  DBGrid2.DataSource.DataSet.Open;
 //  With self.DBGridEh1.DataGrouping do
 //  begin
 //

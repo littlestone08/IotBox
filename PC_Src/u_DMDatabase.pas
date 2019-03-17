@@ -9,7 +9,7 @@ uses
   Data.DB, FireDAC.Comp.Client, FireDAC.Stan.Param, FireDAC.DatS,
   FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Stan.ExprFuncs,
   FireDAC.Phys.SQLiteDef, FireDAC.Phys.SQLite,
-  MemTableEh, Variants, CnDebug, MemTableDataEh, DataDriverEh, uCommonDef, FMX.Types;
+  Variants, uCommonDef, FMX.Types;
 
 type
 
@@ -51,18 +51,23 @@ from tbToolBox a
 
   TdmDatabase = class(TDataModule)
     FDConnection1: TFDConnection;
-    FDQuery1: TFDQuery;
     DataSource1: TDataSource;
     FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
-    DataSetDriverEh1: TDataSetDriverEh;
     FDQuery4: TFDQuery;
-    MemTableEh1: TMemTableEh;
+    FDMemTable1: TFDMemTable;
+    fdaBoxes: TFDTableAdapter;
+    fdaTools: TFDTableAdapter;
+    fdcBoxes: TFDCommand;
+    fdcTools: TFDCommand;
+    fdmBoxes: TFDMemTable;
+    fdmTools: TFDMemTable;
+    dsBoxes: TDataSource;
+    dsTools: TDataSource;
   private
     { Private declarations }
   public
     { Public declarations }
     Constructor Create(AOwner: TComponent); Override;
-    Function AddHrefItem(const APID: Integer; const ACaption: String; AHref: String; AHtmlID: Integer = -1): Integer;
     Procedure db_QueryLeafPages(var Value: TLeavePages);
     Function db_AddHtmlTool(const HtmlSource: String): Integer;
     Procedure db_UpdateHtmlID(const HrefID, HtmlID: Integer);
@@ -120,34 +125,7 @@ const
 
   CONST_WEB_ROOT = 'https://www.mwstore.com';
 
-function TdmDatabase.AddHrefItem(const APID: Integer; const ACaption: String;
-  AHref: String; AHtmlID: Integer): Integer;
-//const
-//  AFmtSQL = 'Insert into ' + CONST_TABLENAME_HREF +
-//    ' (%s, %s, %s, %s) Values (%s, %s, %s, %s )';
-var
-  ASQL: String;
 
-begin
-//  ASQL:= Format(AFmtSQL, [CONST_FIELDNAME_PID, CONST_FIELDNAME_CAPTION, CONST_FIELDNAME_HREF, CONST_FIELDNAME_HTMLID,
-//    APID, ACaption, AHref, L_HtmlID
-//    ]);
-//  FDConnection1.ExecSQL(ASQL);
-  FDQuery1.DisableControls;
-  try
-    FDQuery1.Append;
-    FDQuery1[CONST_FIELDNAME_PID]:= APID;
-    FDQuery1[CONST_FIELDNAME_CAPTION]:= ACaption;
-    FDQuery1[CONST_FIELDNAME_HREF]:= AHref;
-    if AHtmlID >= 0 then
-      FDQuery1[CONST_FIELDNAME_HTMLID]:= AHtmlID;
-    FDQuery1.Post;
-    FDQuery1.Refresh;
-    Result:= FDQuery1[CONST_FIELDNAME_ID];
-  finally
-    FDQuery1.EnableControls;
-  end;
-end;
 
 constructor TdmDatabase.Create(AOwner: TComponent);
 const
@@ -220,7 +198,7 @@ begin
 
 
   {²é¿´±í}
-  MemTableEh1.Active:= True;
+  //MemTableEh1.Active:= True;
   //MemTableEh1.Fields.FieldDefs.Add('LastTimeStamp', ftDateTime);
 //  MemTableEh1.FieldByName(CONST_FIELDNAME_ID).Visible:= False;
 //  MemTableEh1.FieldByName(CONST_FIELDNAME_PID).Visible:= False;
@@ -316,12 +294,12 @@ begin
 
 
 
-  MemTableEh1.DisableControls;
-  try
-    MemTableEh1.Refresh;
-  finally
-    MemTableEh1.EnableControls;
-  end;
+//  MemTableEh1.DisableControls;
+//  try
+//    MemTableEh1.Refresh;
+//  finally
+//    MemTableEh1.EnableControls;
+//  end;
 
 end;
 
