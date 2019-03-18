@@ -6,12 +6,11 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, u_DMDatabase,
   Data.DB, Vcl.Grids, Vcl.DBGrids,  uFrmUsrCloudDllDemo,
-  PlumUtils, uCommonDef;
+  PlumUtils, uCommonDef, Vcl.ExtCtrls, Vcl.ToolWin;
 
 type
   TfrmTools = class(TForm)
     Button1: TButton;
-    Label1: TLabel;
     Button2: TButton;
     Memo1: TMemo;
     DBGrid1: TDBGrid;
@@ -19,12 +18,21 @@ type
     Button3: TButton;
     lvBoxes: TListView;
     Button4: TButton;
+    Panel1: TPanel;
+    Splitter1: TSplitter;
+    Panel2: TPanel;
+    Splitter2: TSplitter;
+    ToolBar1: TToolBar;
+    Splitter3: TSplitter;
+    Timer1: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -80,10 +88,14 @@ begin
   if StartsText('$GPRMC', Str) then
   begin
     _Log('GPS：' + Str);
+    dmDatabase.db_PushBoxComm(DevID);
+    self.ReDrawTools();
   end
   else if StartsText('www.usr.cn', Str) then
   begin
     _Log('设备心跳包：' + Str);
+    dmDatabase.db_PushBoxComm(DevID);
+    self.ReDrawTools();
   end
   else
   begin
@@ -126,9 +138,9 @@ end;
 
 procedure TfrmTools.FormCreate(Sender: TObject);
 begin
+  self.lvBoxes.Clear;
   DBGrid1.DataSource.DataSet.Open;
   DBGrid2.DataSource.DataSet.Open;
-
 end;
 
 procedure TfrmTools.FormDestroy(Sender: TObject);
@@ -143,6 +155,11 @@ begin
   end;
 end;
 
+
+procedure TfrmTools.FormShow(Sender: TObject);
+begin
+  self.ReDrawTools();
+end;
 
 procedure TfrmTools.ParserDevInfo(DevId: PWideChar; pData: PByte;
   DataLen: Integer);
@@ -187,6 +204,7 @@ begin
             _Log(Format('第 %d 个: %s', [i + 1,ToolInfoPtr.EPC_String]));
             Inc(ToolInfoPtr);
           end;
+          self.ReDrawTools();
         end
         else
         begin
@@ -210,6 +228,11 @@ begin
 end;
 
 procedure TfrmTools.ReDrawTools;
+  Function BoxTimeout(TimeThen: TDateTime): Boolean;
+  begin
+    Result:= SecondsBetween(Now, TimeThen) > 60;
+  end;
+
   Function UpdateBox(const BoxID: Integer; const IDEN: String; const BoxName: String; StateStr: String): TListGroup;
   var
     i: Integer;
@@ -236,7 +259,8 @@ procedure TfrmTools.ReDrawTools;
     end;
   end;
 
-  Procedure UpdateTools(const ABoxID: Integer; const IDEN: String; const ToolName: String; StateStr: String);
+  Procedure UpdateTools(const ABoxID: Integer; const IDEN: String;
+    const ToolName: String; StateStr: String);
   var
     i: Integer;
     ATool: TListItem;
@@ -253,6 +277,9 @@ procedure TfrmTools.ReDrawTools;
     if ATool = Nil then
     begin
       ATool:= lvBoxes.Items.Add;
+      ATool.GroupID:= ABoxID;
+      ATool.SubItems.Add('');
+      ATool.SubItems.Add('');
     end;
 
     With ATool do
@@ -262,32 +289,43 @@ procedure TfrmTools.ReDrawTools;
       ATool.SubItems[1]:= IDEN;
     end;
   end;
-  function BoxState(StateCode: Byte; LastTime: TDateTime): String;
+  function BoxState(StateCode: Byte; LastCommTime: TDateTime): String;
   begin
-    if SecondSpan(Now(), LastTime) > 120 then
+    if BoxTimeout(LastCommTime) then
     begin
       Result:= '离线'
     end
     else
       Result:= '在线';
+
+    if Result = '在线' then
     case StateCode of
-      0: Result:= Result + '(打开)';
-      1: Result:= Result + '(关闭)';
+      0: Result:= Result + '(未知)';
+      1: Result:= Result + '(打开)';
+      2: Result:= Result + '(关闭)';
     else
       Result:= Result + '(未知:'+ IntToStr(StateCode) +')';
     end;
   end;
-  function ToolState(LastBoxTime: TDateTime; LastTime: TDateTime): String;
+  function ToolState(BoxCommTime, BoxScanTime: TDateTime; ToolScanTime: TDateTime): String;
   begin
-    if SecondSpan(Now(), LastTime) > 2 then
+    if BoxTimeout(BoxCommTime) then
     begin
-      Result:= '已拿出'
+      Result:= '未知';
     end
     else
-      Result:= '未拿出';
+    begin
+      if SecondSpan(ToolScanTime, BoxScanTime) > 2 then
+      begin
+        Result:= '已拿出'
+      end
+      else
+        Result:= '未拿出';
+    end;
   end;
 var
-  BoxTime: TDateTime;
+  BoxScanTime: TDateTime;
+  BoxCommTime: TDateTime;
 begin
   With dmDatabase do
   begin
@@ -297,26 +335,31 @@ begin
       fdmBoxes.First;
       while not fdmBoxes.Eof do
       begin
-        BoxTime:= fdmBoxes.FieldValues['LastTimeStamp'];
+        BoxCommTime:= fdmBoxes.FieldValues['LastCommTime'];
+        BoxScanTime:= fdmBoxes.FieldValues['LastScanTime'];
         UpdateBox(fdmBoxes.FieldValues['id'],
                   fdmBoxes.FieldValues['iden'],
                   fdmBoxes.FieldValues['Name'],
-                  BoxState(fdmBoxes.FieldValues['Status'], BoxTime)
+                  BoxState(fdmBoxes.FieldValues['Status'], BoxCommTime)
         );
+        //更新对应工具箱中的工具信息
+        fdmTools.First;
+        while not fdmTools.Eof do
+        begin
+          UpdateTools(
+                      fdmTools.FieldValues['bid'],
+                      fdmTools.FieldValues['iden'],
+                      fdmTools.FieldValues['Name'],
+                      ToolState(BoxCommTime, BoxScanTime,
+                            fdmTools.FieldValues['LastScanTime'])
+          );
+          fdmTools.Next;
+        end;
+
+
         fdmBoxes.Next;
       end;
 
-      fdmTools.First;
-      while not fdmTools.Eof do
-      begin
-        UpdateTools(
-                    fdmTools.FieldValues['bid'],
-                    fdmTools.FieldValues['iden'],
-                    fdmTools.FieldValues['Name'],
-                    ToolState(BoxTime, fdmTools.FieldValues['LastTimeStamp'])
-        );
-        fdmTools.Next;
-      end;
     finally
       fdmBoxes.EnableControls;
       fdmTools.EnableControls;
@@ -324,6 +367,11 @@ begin
   end;
 
   Log.d(inttoStr(self.lvBoxes.Groups.Count));
+end;
+
+procedure TfrmTools.Timer1Timer(Sender: TObject);
+begin
+  self.ReDrawTools();
 end;
 
 procedure TfrmTools._Log(const Info: String);
