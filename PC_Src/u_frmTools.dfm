@@ -3,7 +3,7 @@ object frmTools: TfrmTools
   Top = 0
   Caption = #24037#20855#31665
   ClientHeight = 635
-  ClientWidth = 1080
+  ClientWidth = 1208
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -14,7 +14,7 @@ object frmTools: TfrmTools
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   DesignSize = (
-    1080
+    1208
     635)
   PixelsPerInch = 96
   TextHeight = 13
@@ -30,14 +30,14 @@ object frmTools: TfrmTools
     Top = 1
     Width = 75
     Height = 25
-    Caption = #36830#25509
+    Caption = #36830#25509#26381#21153#22120
     TabOrder = 0
     OnClick = Button1Click
   end
   object TreeView1: TTreeView
     Left = 8
     Top = 32
-    Width = 273
+    Width = 225
     Height = 233
     Indent = 19
     TabOrder = 1
@@ -58,7 +58,7 @@ object frmTools: TfrmTools
   object Memo1: TMemo
     Left = 8
     Top = 285
-    Width = 1064
+    Width = 1192
     Height = 342
     Anchors = [akLeft, akTop, akRight, akBottom]
     Font.Charset = ANSI_CHARSET
@@ -71,12 +71,12 @@ object frmTools: TfrmTools
     ParentFont = False
     ScrollBars = ssBoth
     TabOrder = 3
-    ExplicitWidth = 1082
+    ExplicitWidth = 1064
   end
   object DBGrid1: TDBGrid
-    Left = 312
+    Left = 248
     Top = 32
-    Width = 760
+    Width = 952
     Height = 81
     Anchors = [akLeft, akTop, akRight, akBottom]
     DataSource = dmDatabase.dsBoxes
@@ -88,9 +88,9 @@ object frmTools: TfrmTools
     TitleFont.Style = []
   end
   object DBGrid2: TDBGrid
-    Left = 312
+    Left = 248
     Top = 119
-    Width = 760
+    Width = 952
     Height = 146
     Anchors = [akLeft, akTop, akRight, akBottom]
     DataSource = dmDatabase.dsTools
@@ -100,5 +100,14 @@ object frmTools: TfrmTools
     TitleFont.Height = -13
     TitleFont.Name = #23435#20307
     TitleFont.Style = []
+  end
+  object Button3: TButton
+    Left = 497
+    Top = 1
+    Width = 88
+    Height = 25
+    Caption = #25163#24037#20462#25913#20445#23384
+    TabOrder = 6
+    OnClick = Button3Click
   end
 end

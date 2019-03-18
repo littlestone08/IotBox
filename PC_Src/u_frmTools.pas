@@ -17,11 +17,12 @@ type
     Memo1: TMemo;
     DBGrid1: TDBGrid;
     DBGrid2: TDBGrid;
+    Button3: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button2Click(Sender: TObject);
-    procedure CheckBox1Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -31,6 +32,7 @@ type
     { Public declarations }
       Procedure Usr_Dev_StatusPush_CBF(MessageID: LongInt; DevId, JsonStr: PWideChar);
       Procedure Usr_RcvRawFromDev_CBF(MessageID: LongInt; DevId: PWideChar; pData: PByte;  DataLen: Integer);
+      Procedure ReDrawTools();
   end;
 
 var
@@ -86,10 +88,6 @@ begin
     _Log('二进制数据流: ' + PlumUtils.Buf2Hex(Str));
     ParserDevInfo(DevId, pData, DataLen);
   end;
-
-  //_Log('原始数据流: ' + Str);
-
-
 end;
 
 procedure TfrmTools.Button2Click(Sender: TObject);
@@ -97,95 +95,23 @@ begin
   FrmUsrCloudDllDemo.Show;
 end;
 
-procedure TfrmTools.CheckBox1Click(Sender: TObject);
+procedure TfrmTools.Button3Click(Sender: TObject);
 begin
-//  if sender is TCheckBox then
-//  begin
-//    dmDatabase.MemTableEh1.FieldByName(TCheckBox(Sender).Caption).Visible:= TCheckBox(Sender).Checked;
-//  end;
+  With dmDatabase.fdmBoxes do
+    if (State in [dsEdit, dsInsert]) then
+      Post;
+
+  With dmDatabase.fdmTools do
+    if (State in [dsEdit, dsInsert]) then
+      Post;
 end;
+
+
 
 procedure TfrmTools.FormCreate(Sender: TObject);
 begin
   DBGrid1.DataSource.DataSet.Open;
   DBGrid2.DataSource.DataSet.Open;
-//  With self.DBGridEh1.DataGrouping do
-//  begin
-//
-//    Active:= True;
-//    GroupPanelVisible:= True;
-//    With GroupLevels.Add do
-//    begin
-//      Column:= self.DBGridEh1.FindFieldColumn('ID');
-//    end;
-//  end;
-//  self.DBGridEh1.DataSource.DataSet.FieldByName('ToolBox').DisplayLabel:= '工具箱';
-//select  a.id    as ToolBoxID,
-//        a.Name  as ToolBox,
-//        a.Status as Status,
-//        b.id    as ToolID,
-//        b.Name  as ToolName,
-//        b.PC,
-//        b.RSSI,
-//        b.EPC,b.InBox
-//  With DBGridEh1.DataSource.DataSet do
-//  begin
-//    With FieldByName('ToolBox') do
-//    begin
-//      DisplayLabel:= '工具箱';
-//      DisplayWidth:= 10;
-//    end;
-//    With FieldByName('ToolBoxIden') do
-//    begin
-//      DisplayLabel:= '工具箱编码';
-//      DisplayWidth:= 10;
-//    end;
-//    With FieldByName('Status') do
-//    begin
-//      DisplayLabel:= '状态';
-//      DisplayWidth:= 10;
-//    end;
-//
-//    With FieldByName('IsOnline') do
-//    begin
-//      DisplayLabel:= '联网';
-//      DisplayWidth:= 10;
-//    end;
-//
-//    With FieldByName('LastTimeStamp') do
-//    begin
-//      DisplayLabel:= '上次通信时间';
-//      DisplayWidth:= 10;
-//    end;
-//
-//    With FieldByName('ToolIden') do
-//    begin
-//      DisplayLabel:= '工具编码';
-//      DisplayWidth:= 10;
-//    end;
-//
-//    With FieldByName('ToolName') do
-//    begin
-//      DisplayLabel:= '工具';
-//      DisplayWidth:= 10;
-//    end;
-//
-//    With FieldByName('InBox') do
-//    begin
-//      DisplayLabel:= '未使用';
-//      DisplayWidth:= 10;
-//    end;
-//
-//
-//
-//    With FieldByName('PC') do
-//    begin
-////      DisplayLabel:= '未使用';
-//      DisplayWidth:= 10;
-//    end;
-//    FieldByName('ToolBoxID').Visible:= False;
-//    FieldByName('ToolID').Visible:= False;
-//  end;
 end;
 
 procedure TfrmTools.FormDestroy(Sender: TObject);
@@ -264,6 +190,12 @@ begin
   begin
     _Log(Format('无法解析, 数据长度错误: %d', [DataLen]));
   end;
+end;
+
+procedure TfrmTools.ReDrawTools;
+begin
+  dmDatabase.fdmBoxes.Refresh();
+  dmDatabase.fdmTools.Refresh();
 end;
 
 procedure TfrmTools._Log(const Info: String);

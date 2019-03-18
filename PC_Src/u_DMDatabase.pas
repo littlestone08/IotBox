@@ -53,7 +53,7 @@ from tbToolBox a
     FDConnection1: TFDConnection;
     DataSource1: TDataSource;
     FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
-    FDQuery4: TFDQuery;
+    fdqModify: TFDQuery;
     FDMemTable1: TFDMemTable;
     fdaBoxes: TFDTableAdapter;
     fdaTools: TFDTableAdapter;
@@ -65,13 +65,17 @@ from tbToolBox a
     dsTools: TDataSource;
   private
     { Private declarations }
+    Procedure RefreshUI;
+    function Add_Update_Box(DevIden: String; BoxStatus: byte): Integer;
+    function Add_UPdate_Tool(BoxID: Integer; PC, EPC: String;
+      RSSI: ShortInt): Integer;
   public
     { Public declarations }
     Constructor Create(AOwner: TComponent); Override;
     Procedure db_QueryLeafPages(var Value: TLeavePages);
-    Function db_AddHtmlTool(const HtmlSource: String): Integer;
     Procedure db_UpdateHtmlID(const HrefID, HtmlID: Integer);
-    Procedure db_UpdateToolURL(const ID: Integer; const URL: String);
+
+  public
     Procedure db_PushBoxToolList(const DevIden: String; const boxStatus: Byte; ToolListPtr: PToolInfoRec; ToolCount: Integer);
   end;
 
@@ -79,7 +83,8 @@ var
   dmDatabase: TdmDatabase;
 
 implementation
-
+uses
+  u_frmTools;
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
@@ -95,14 +100,15 @@ const
   CONST_FIELDNAME_ID      = 'ID';
   CONST_FIELDNAME_IDEN          = 'IDEN';
   CONST_FIELDNAME_NAME          = 'Name';
+  CONST_FIELDNAME_LASTTIMESTAMP = 'LastTimeStamp';
   //工具箱表
   CONST_TB_TOOLBOX = 'tbToolBox';
 
   CONST_FIELDNAME_STATUS        = 'Status';
   CONST_FIELDNAME_BATTERY       = 'Battery';
   CONST_FIELDNAME_CHARGING      = 'Charging';
-  CONST_FIELDNAME_ISONLINE      = 'IsOnline';
-  CONST_FIELDNAME_LASTTIMESTAMP = 'LastTimeStamp';
+  //CONST_FIELDNAME_ISONLINE      = 'IsOnline';
+
 
   //工具属性
   CONST_TB_TOOLS   = 'tbTools';
@@ -110,20 +116,10 @@ const
   CONST_FIELDNAME_PC       = 'PC';
   CONST_FIELDNAME_RSSI       = 'RSSI';
   CONST_FIELDNAME_EPC       = 'EPC';
-  CONST_FIELDNAME_INBOX     = 'InBox';
+  //CONST_FIELDNAME_INBOX     = 'InBox';
   CONST_FIELDNAME_DAT       = 'Memo';
   CONST_FIELDNAME_BOXID     = 'BID';
 
-  //-------------------------------------
-  CONST_FIELDNAME_PID     = 'PID';
-  CONST_FIELDNAME_CAPTION = 'Caption';
-  CONST_FIELDNAME_HREF    = 'Hreflink';
-  CONST_FIELDNAME_TOOLURL = 'ToolURL';
-  CONST_FIELDNAME_HTMLID  = 'HTMLID';
-  CONST_FIELDNAME_HTML    = 'HTML';
-  CONST_FIELDNAME_HTML2   = 'HTML2';
-
-  CONST_WEB_ROOT = 'https://www.mwstore.com';
 
 
 
@@ -162,13 +158,15 @@ begin
       begin
         ASQL:= 'CREATE TABLE ' + CONST_TB_TOOLBOX + ' ('    +
                               CONST_FIELDNAME_ID +' integer PRIMARY KEY,'     +
-                              CONST_FIELDNAME_IDEN + ' string(24), '       +
+                              CONST_FIELDNAME_IDEN + ' Text(24), '       +
+                              CONST_FIELDNAME_LASTTIMESTAMP+ ' DateTime, ' +     //最后的通信时间，用来计算是否在线
+
                               CONST_FIELDNAME_NAME    + ' string(20), '       +
+
                               CONST_FIELDNAME_STATUS  + ' TINYINT, '      +     //0:unkown, 1: ffline 2:opend 3 closed
                               CONST_FIELDNAME_BATTERY + ' TINYINT, '      +     //0~100 百分比
-                              CONST_FIELDNAME_CHARGING+ ' BOOLEAN, '       +     //是否在充电
-                              CONST_FIELDNAME_ISONLINE+ ' BOOLEAN, '       +     //是否在线
-                              CONST_FIELDNAME_LASTTIMESTAMP+ ' DateTime' +     //最后的通信时间，用来计算是否在线
+                              CONST_FIELDNAME_CHARGING+ ' BOOLEAN '       +     //是否在充电
+
                               ')';
         Conn.ExecSQL(ASQL);
       end;
@@ -177,12 +175,14 @@ begin
         ASQL:= 'CREATE TABLE ' + CONST_TB_TOOLS + ' ('    +
                               CONST_FIELDNAME_ID +' integer PRIMARY KEY,'     +
                               CONST_FIELDNAME_IDEN + ' string(24), '       +
+                              CONST_FIELDNAME_LASTTIMESTAMP+ ' DateTime, ' +     //最后的通信时间，用来计算是否在线
+
                               CONST_FIELDNAME_NAME    + ' string(24), '       +
+
                               CONST_FIELDNAME_TID     + ' Text, '       +
                               CONST_FIELDNAME_RSSI    + ' TinyInt, '       +
                               CONST_FIELDNAME_PC      + ' String(4), '       +
                               CONST_FIELDNAME_EPC     + ' String(24), '       +
-                              CONST_FIELDNAME_INBOX   + ' BOOLEAN, '       +     //是否在盒子中
                               CONST_FIELDNAME_DAT     + ' Text, '             +
                               CONST_FIELDNAME_BOXID  + ' integer null, ' +
                               'FOREIGN KEY (' + CONST_FIELDNAME_BOXID + ') REFERENCES ' +
@@ -204,103 +204,25 @@ begin
 //  MemTableEh1.FieldByName(CONST_FIELDNAME_PID).Visible:= False;
 end;
 
-function TdmDatabase.db_AddHtmlTool(const HtmlSource: String): Integer;
-const
-  AFmtSQL = 'select * from  %s';
-var
-  L_Query: TFDQuery;
-  L_Count: Integer;
-begin
-  L_Query:= TFDQuery.Create(Nil);
-  try
-    L_Query.Connection:= FDConnection1;
-    L_Query.SQL.Text:= Format(AFmtSQL, [
-                                  CONST_TB_TOOLBOX,
-                                  CONST_FIELDNAME_ID]);
-    L_Query.Active:= True;
-    L_Query.DisableControls;
-    L_Query.Append;
-    L_Query[CONST_FIELDNAME_HTML]:= HtmlSource;
-    L_Query.Post;
-    L_Query.Refresh;
-    Result:= L_Query[CONST_FIELDNAME_ID];
-  finally
-    L_Query.Free;
-  end;
-end;
 
 
 
 procedure TdmDatabase.db_PushBoxToolList(const DevIden: String; const boxStatus: Byte; ToolListPtr:
   PToolInfoRec; ToolCount: Integer);
-  Function GetBoxID(AIden: string; var ID: Integer): Boolean;
-  begin
-    Result:= False;
-    FDQuery4.Open('Select ID From tbToolBox where Iden = ' + AIden);
-    if FDQuery4.RecordCount = 1 then
-    begin
-      ID:= FDQuery4.FieldValues['ID'];
-      Result:= True;
-    end;
-  end;
-const
-  ANowBoxFmtSQL = 'Insert into ' + CONST_TB_TOOLBOX +
-    ' (%s, %s, %s, %s, %s) Values (%s, %s, %d, 1, Now() )';
-  InsToolSQL = 'Insert into ' + CONST_TB_TOOLS +
-    ' (%s, %s, %s, %s, %s, %s) Values (%d, "%s", "%s", %d, "%s", "%s" )';
 var
   i: Integer;
   SQLCmd: String;
   BoxID: Integer;
-  PC_Byte: TBytes;
+  Changed: Boolean;
 begin
-
-  if Not GetBoxID(DevIden, BoxID) then
-  begin
-    SQLCmd:= Format(ANowBoxFmtSQL, [
-      CONST_FIELDNAME_IDEN,
-      CONST_FIELDNAME_NAME,
-      CONST_FIELDNAME_STATUS,
-      CONST_FIELDNAME_ISONLINE,
-      CONST_FIELDNAME_LASTTIMESTAMP,
-      DevIden, DevIden, BoxStatus
-      //, 1
-      //, FormatDateTime('YYYY-MM-DD HH:NN:SS', NOw)
-    ]);
-    //Log.d(SQLCmd);
-    FDQuery4.ExecSQL(SQLCmd);
-    Assert(GetBoxID(DevIden, BoxID) = True, '');
-  end;
-
+  BoxID:= Add_Update_Box(DevIden, BoxStatus);
   for i := 0 to ToolCount - 1 do
   begin
-    SetLength(PC_Byte, 2);
-    Move(ToolListPtr.PC, PC_Byte[0], 2);
-    SQLCmd:= Format(InsToolSQL, [
-      CONST_FIELDNAME_BOXID  ,
-      CONST_FIELDNAME_IDEN,
-      CONST_FIELDNAME_NAME,
-      CONST_FIELDNAME_RSSI,
-      CONST_FIELDNAME_PC,
-      CONST_FIELDNAME_EPC,
-
-      BoxID, ToolListPtr.Iden_String(), ToolListPtr.Iden_String(),
-      ToolListPtr.RSSI,ToolListPtr.PC_String(),ToolListPtr.EPC_String()
-    ]);
-    Log.d(SQLCmd);
-    FDQuery4.ExecSQL(SQLCmd);
+    Add_UPdate_Tool(BoxID, ToolListPtr.PC_String, ToolListPtr.EPC_String, ToolListPtr.RSSI);
     inc(ToolListPtr);
   end;
 
-
-
-//  MemTableEh1.DisableControls;
-//  try
-//    MemTableEh1.Refresh;
-//  finally
-//    MemTableEh1.EnableControls;
-//  end;
-
+  RefreshUI();
 end;
 
 procedure TdmDatabase.db_QueryLeafPages(var Value: TLeavePages);
@@ -362,12 +284,67 @@ begin
   FDConnection1.ExecSQL(ASQL);
 end;
 
-procedure TdmDatabase.db_UpdateToolURL(const ID: Integer; const URL: String);
-var
-  ASQL : String;
+
+
+procedure TdmDatabase.RefreshUI;
 begin
-  ASQL:= 'Update tbHref set ToolURL = :URL where ID = :ID';
-  FDConnection1.ExecSQL(ASQL, [CONST_WEB_ROOT + URL, ID]);
+  frmTools.ReDrawTools();
 end;
 
+
+  Function TdmDatabase.Add_Update_Box(DevIden: String; BoxStatus: byte): Integer;
+  begin
+    fdqModify.SQL.Text:= 'select * from tbToolBox';
+    fdqModify.Open();
+    if Not fdqModify.Locate('iden', DevIden) then
+    begin
+      fdqModify.Append;
+      fdqModify.FieldByName('iden').AsString:= DevIden;
+      fdqModify.FieldByName('name').AsString:= DevIden;
+      fdqModify.FieldByName('Status').Value:= BoxStatus;
+    end;
+    if Not (fdqModify.State in [dsEdit, dsInsert]) then
+    begin
+      fdqModify.Edit;
+    end;
+
+    fdqModify.FieldByName('LastTimeStamp').Value:= Now();
+    fdqModify.Post;
+    fdqModify.Close;
+    fdqModify.Open('select id from tbToolBox where iden = ' + '''' + DevIden+ '''');
+    Result:= fdqModify.FieldByName('id').Value;
+    fdqModify.Close;
+  end;
+
+  Function TdmDatabase.Add_UPdate_Tool(BoxID: Integer; PC: String; EPC: String; RSSI: ShortInt): Integer;
+  const
+    InsToolSQL = 'Insert into ' + CONST_TB_TOOLS +
+      ' (%s, %s, %s, %s, %s, %s) Values (%d, "%s", "%s", %d, "%s", "%s" )';
+  var
+    CmdSQL: String;
+  begin
+    fdqModify.SQL.Text:= 'select * from tbTools where BID = ' + IntToStr(BoxID);
+    fdqModify.Open();
+
+    if Not fdqModify.Locate('iden', EPC) then
+    begin
+      fdqModify.Append;
+      fdqModify.FieldByName('bid').Value:= BoxID;
+      fdqModify.FieldByName('iden').AsString:= EPC;
+      fdqModify.FieldByName('name').AsString:= EPC;
+      fdqModify.FieldByName('rssi').Value:= RSSI;
+      fdqModify.FieldByName('pc').Value:= PC;
+      fdqModify.FieldByName('epc').Value:= EPC;
+    end;
+    if Not (fdqModify.State in [dsEdit, dsInsert]) then
+    begin
+      fdqModify.Edit;
+    end;
+    fdqModify.FieldByName('LastTimeStamp').Value:= Now();
+    fdqModify.Post;
+    fdqModify.Close;
+    fdqModify.Open('select id from tbTools where iden = '+ '''' + EPC + '''');
+    Result:= fdqModify.FieldByName('id').Value;
+    fdqModify.Close;
+  end;
 end.

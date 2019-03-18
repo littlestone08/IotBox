@@ -11,7 +11,6 @@ type
     EPC: Array[0..11] of Byte;
     function PC_String: AnsiString;
     function EPC_String: AnsiString;
-    function Iden_String: AnsiString;
   End;
 implementation
 
@@ -23,11 +22,7 @@ begin
   BinToHex(Pointer(@EPC), PAnsiChar(@Result[1]), 12);
 end;
 
-function TToolInfoRec.Iden_String: AnsiString;
-begin
-  SetLength(Result, 24);
-  BinToHex(Pointer(@EPC), PAnsiChar(@Result[1]), 12);
-end;
+
 
 function TToolInfoRec.PC_String: AnsiString;
 begin

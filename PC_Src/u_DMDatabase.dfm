@@ -4,9 +4,8 @@ object dmDatabase: TdmDatabase
   Width = 567
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'Database=H:\WORK\IOT_ToolBox\IotBox\PC_Src\Win32\Debug\ToolDB'
+      'Database=D:\WORK\Io_Box\IotBox_Uv4\PC_Src\Win32\Debug\ToolDB'
       'DriverID=SQLite')
-    Connected = True
     Left = 88
     Top = 64
   end
@@ -18,7 +17,7 @@ object dmDatabase: TdmDatabase
     Left = 88
     Top = 8
   end
-  object FDQuery4: TFDQuery
+  object fdqModify: TFDQuery
     Connection = FDConnection1
     SQL.Strings = (
       'select IDEN from tbToolBox'
@@ -39,6 +38,7 @@ object dmDatabase: TdmDatabase
     Top = 72
   end
   object fdaBoxes: TFDTableAdapter
+    UpdateTableName = 'tbToolBox'
     DatSTableName = 'fdmBoxes'
     SelectCommand = fdcBoxes
     Left = 120
