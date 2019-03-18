@@ -12,17 +12,19 @@ type
   TfrmTools = class(TForm)
     Button1: TButton;
     Label1: TLabel;
-    TreeView1: TTreeView;
     Button2: TButton;
     Memo1: TMemo;
     DBGrid1: TDBGrid;
     DBGrid2: TDBGrid;
     Button3: TButton;
+    lvBoxes: TListView;
+    Button4: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -40,7 +42,7 @@ var
 
 implementation
 uses
-  Fmx.Types, StrUtils;
+  Fmx.Types, StrUtils, DateUtils;
 
 {$R *.dfm}
 
@@ -97,6 +99,10 @@ end;
 
 procedure TfrmTools.Button3Click(Sender: TObject);
 begin
+  self.lvBoxes.ShowColumnHeaders:= False;
+  self.lvBoxes.ShowColumnHeaders:= True;
+  self.lvBoxes.Clear;
+
   With dmDatabase.fdmBoxes do
     if (State in [dsEdit, dsInsert]) then
       Post;
@@ -108,10 +114,21 @@ end;
 
 
 
+procedure TfrmTools.Button4Click(Sender: TObject);
+begin
+  LockWindowUpdate(self.lvBoxes.Handle);
+  try
+    self.ReDrawTools();
+  finally
+    LockWindowUpdate(0);
+  end;
+end;
+
 procedure TfrmTools.FormCreate(Sender: TObject);
 begin
   DBGrid1.DataSource.DataSet.Open;
   DBGrid2.DataSource.DataSet.Open;
+
 end;
 
 procedure TfrmTools.FormDestroy(Sender: TObject);
@@ -193,9 +210,120 @@ begin
 end;
 
 procedure TfrmTools.ReDrawTools;
+  Function UpdateBox(const BoxID: Integer; const IDEN: String; const BoxName: String; StateStr: String): TListGroup;
+  var
+    i: Integer;
+  begin
+    Result:= Nil;
+    for i := 0 to self.lvBoxes.Groups.Count - 1 do
+    begin
+      if lvBoxes.Groups.Items[i].GroupID =  BoxID then
+      begin
+        Result:= lvBoxes.Groups.Items[i];
+        Break;
+      end;
+    end;
+
+    if Result = Nil then
+      Result:= lvBoxes.Groups.Add;
+
+    With Result do
+    begin
+      GroupID:= BoxID;
+      Header:= BoxName;
+      Footer:= IDEN;
+      Subtitle:= StateStr;
+    end;
+  end;
+
+  Procedure UpdateTools(const ABoxID: Integer; const IDEN: String; const ToolName: String; StateStr: String);
+  var
+    i: Integer;
+    ATool: TListItem;
+  begin
+    ATool:= Nil;
+    for i := 0 to lvBoxes.Items.Count - 1 do
+    begin
+      if lvBoxes.Items[i].SubItems[1] = IDEN then
+      begin
+        ATool:= lvBoxes.Items[i];
+        Break;
+      end;
+    end;
+    if ATool = Nil then
+    begin
+      ATool:= lvBoxes.Items.Add;
+    end;
+
+    With ATool do
+    begin
+      ATool.Caption:= ToolName;
+      ATool.SubItems[0]:= StateStr;
+      ATool.SubItems[1]:= IDEN;
+    end;
+  end;
+  function BoxState(StateCode: Byte; LastTime: TDateTime): String;
+  begin
+    if SecondSpan(Now(), LastTime) > 120 then
+    begin
+      Result:= '离线'
+    end
+    else
+      Result:= '在线';
+    case StateCode of
+      0: Result:= Result + '(打开)';
+      1: Result:= Result + '(关闭)';
+    else
+      Result:= Result + '(未知:'+ IntToStr(StateCode) +')';
+    end;
+  end;
+  function ToolState(LastBoxTime: TDateTime; LastTime: TDateTime): String;
+  begin
+    if SecondSpan(Now(), LastTime) > 2 then
+    begin
+      Result:= '已拿出'
+    end
+    else
+      Result:= '未拿出';
+  end;
+var
+  BoxTime: TDateTime;
 begin
-  dmDatabase.fdmBoxes.Refresh();
-  dmDatabase.fdmTools.Refresh();
+  With dmDatabase do
+  begin
+    fdmBoxes.DisableControls;
+    fdmTools.DisableControls;
+    try
+      fdmBoxes.First;
+      while not fdmBoxes.Eof do
+      begin
+        BoxTime:= fdmBoxes.FieldValues['LastTimeStamp'];
+        UpdateBox(fdmBoxes.FieldValues['id'],
+                  fdmBoxes.FieldValues['iden'],
+                  fdmBoxes.FieldValues['Name'],
+                  BoxState(fdmBoxes.FieldValues['Status'], BoxTime)
+        );
+        fdmBoxes.Next;
+      end;
+
+      fdmTools.First;
+      while not fdmTools.Eof do
+      begin
+        UpdateTools(
+                    fdmTools.FieldValues['bid'],
+                    fdmTools.FieldValues['iden'],
+                    fdmTools.FieldValues['Name'],
+                    ToolState(BoxTime, fdmTools.FieldValues['LastTimeStamp'])
+        );
+        fdmTools.Next;
+      end;
+    finally
+      fdmBoxes.EnableControls;
+      fdmTools.EnableControls;
+    end;
+  end;
+
+  Log.d(inttoStr(self.lvBoxes.Groups.Count));
 end;
 
 procedure TfrmTools._Log(const Info: String);

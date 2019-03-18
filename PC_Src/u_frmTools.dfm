@@ -34,25 +34,13 @@ object frmTools: TfrmTools
     TabOrder = 0
     OnClick = Button1Click
   end
-  object TreeView1: TTreeView
-    Left = 8
-    Top = 32
-    Width = 225
-    Height = 233
-    Indent = 19
-    TabOrder = 1
-    Items.NodeData = {
-      0301000000240000000000000000000000FFFFFFFFFFFFFFFF00000000000000
-      00010000000103E55D7751B17B220000000000000000000000FFFFFFFFFFFFFF
-      FF0000000000000000000000000102BE8B0759}
-  end
   object Button2: TButton
     Left = 344
     Top = 1
     Width = 75
     Height = 25
     Caption = #35843#35797#31383#21475
-    TabOrder = 2
+    TabOrder = 1
     OnClick = Button2Click
   end
   object Memo1: TMemo
@@ -60,7 +48,7 @@ object frmTools: TfrmTools
     Top = 285
     Width = 1192
     Height = 342
-    Anchors = [akLeft, akTop, akRight, akBottom]
+    Anchors = [akLeft, akRight, akBottom]
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
@@ -70,17 +58,16 @@ object frmTools: TfrmTools
       'Memo1')
     ParentFont = False
     ScrollBars = ssBoth
-    TabOrder = 3
-    ExplicitWidth = 1064
+    TabOrder = 2
   end
   object DBGrid1: TDBGrid
-    Left = 248
+    Left = 352
     Top = 32
-    Width = 952
+    Width = 848
     Height = 81
-    Anchors = [akLeft, akTop, akRight, akBottom]
+    Anchors = [akLeft, akTop, akRight]
     DataSource = dmDatabase.dsBoxes
-    TabOrder = 4
+    TabOrder = 3
     TitleFont.Charset = ANSI_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -13
@@ -88,13 +75,13 @@ object frmTools: TfrmTools
     TitleFont.Style = []
   end
   object DBGrid2: TDBGrid
-    Left = 248
+    Left = 352
     Top = 119
-    Width = 952
+    Width = 848
     Height = 146
     Anchors = [akLeft, akTop, akRight, akBottom]
     DataSource = dmDatabase.dsTools
-    TabOrder = 5
+    TabOrder = 4
     TitleFont.Charset = ANSI_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -13
@@ -107,7 +94,56 @@ object frmTools: TfrmTools
     Width = 88
     Height = 25
     Caption = #25163#24037#20462#25913#20445#23384
-    TabOrder = 6
+    TabOrder = 5
     OnClick = Button3Click
+  end
+  object lvBoxes: TListView
+    Left = 7
+    Top = 32
+    Width = 339
+    Height = 233
+    Anchors = [akLeft, akTop, akBottom]
+    Columns = <
+      item
+        Caption = #21517#31216
+        Width = 100
+      end
+      item
+        Caption = #29366#24577
+        Width = 100
+      end
+      item
+        Caption = #20869#37096#32534#30721
+        Width = 120
+      end>
+    Groups = <
+      item
+        Header = #31665'#1'
+        Footer = '00022845000000000004'
+        GroupID = 3
+        State = [lgsNormal]
+        HeaderAlign = taLeftJustify
+        FooterAlign = taRightJustify
+        Subtitle = #22312#32447'('#25171#24320')'
+        TitleImage = -1
+      end>
+    Items.ItemData = {
+      055E0000000200000000000000FFFFFFFFFFFFFFFF0100000003000000000000
+      00047F674B623500F75303C0684B6D305298FD6B1700000000FFFFFFFFFFFFFF
+      FF01000000030000000000000003BA871D4E0052042A67C0684B6D305210F56B
+      17FFFFFFFF}
+    GroupView = True
+    ReadOnly = True
+    TabOrder = 6
+    ViewStyle = vsReport
+  end
+  object Button4: TButton
+    Left = 600
+    Top = 1
+    Width = 75
+    Height = 25
+    Caption = 'Button4'
+    TabOrder = 7
+    OnClick = Button4Click
   end
 end

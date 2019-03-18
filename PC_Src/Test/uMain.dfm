@@ -20,12 +20,32 @@ object Form1: TForm1
     Width = 643
     Height = 311
     Align = alClient
-    Columns = <>
+    Columns = <
+      item
+        Caption = 'col1'
+      end
+      item
+        Caption = 'col2'
+      end>
+    Groups = <
+      item
+        Header = 'HEADER'
+        Footer = 'FOOTER'
+        GroupID = 3
+        State = [lgsNormal]
+        HeaderAlign = taLeftJustify
+        FooterAlign = taRightJustify
+        Subtitle = 'SUBTITLE'
+        TitleImage = -1
+      end>
+    Items.ItemData = {
+      05800000000300000000000000FFFFFFFFFFFFFFFF0100000003000000000000
+      00056900740065006D0031000463006F006C00320078B1592F00000000FFFFFF
+      FFFFFFFFFF010000000300000000000000056900740065006D0032000463006F
+      006C0032004862592F00000000FFFFFFFFFFFFFFFF00000000FFFFFFFF000000
+      0000FFFFFFFF}
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitLeft = 40
-    ExplicitTop = 72
-    ExplicitWidth = 250
-    ExplicitHeight = 150
+    OnCustomDrawSubItem = lv1CustomDrawSubItem
   end
 end

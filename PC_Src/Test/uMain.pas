@@ -4,12 +4,15 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls;
 
 type
   TForm1 = class(TForm)
     lv1: TListView;
     procedure FormCreate(Sender: TObject);
+    procedure lv1CustomDrawSubItem(Sender: TCustomListView; Item: TListItem;
+      SubItem: Integer; State: TCustomDrawState; var DefaultDraw: Boolean);
+
   private
     { Private declarations }
   public
@@ -21,7 +24,10 @@ var
 
 implementation
 
+
 {$R *.dfm}
+
+
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
@@ -83,12 +89,19 @@ begin
     begin
       GroupID := 1;
       Header := '分组标题1';
+      Subtitle:= '分组子标题';
+      Footer:= '分组底标题1';
+      FooterAlign:= taRightJustify;
+
     end;
 
     with Groups.Add do
     begin
       GroupID := 2;
       Header := '分组标题2';
+      Subtitle:= '分组子标题';
+      Footer:= '分组底标题2';
+      FooterAlign:= taRightJustify;
     end;
     GroupView := True;                            //打开或关闭分组视图
     HideSelection := True;                        //失去焦点时，项不再保持被选择状态
@@ -101,7 +114,7 @@ begin
     HoverTime := -1;                              //鼠标在项上暂停时间，除非HotTrack为True
     with IconOptions do                           //确定如何排列图标，vsIcon or vsSmallIcons 有效
     begin
-      Arrangement := iaTop;                       //项在顶部从左到右对齐，iaLeft在左部从上到下对齐
+      Arrangement := TIconArrangement.iaTop;                       //项在顶部从左到右对齐，iaLeft在左部从上到下对齐
       AutoArrange := False;                       //图标自动重新排列
       WrapText := True;                           //图标标题是否折行
     end;
@@ -141,5 +154,13 @@ begin
   end;
 end;
 
+
+procedure TForm1.lv1CustomDrawSubItem(Sender: TCustomListView; Item: TListItem;
+  SubItem: Integer; State: TCustomDrawState; var DefaultDraw: Boolean);
+begin
+  if Item.Caption = '行三列一' then
+    Sender.Canvas.Font.Color:= clRed;
+
+end;
 
 end.
