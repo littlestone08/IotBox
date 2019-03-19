@@ -41,10 +41,6 @@ object frmTools: TfrmTools
     ParentFont = False
     ScrollBars = ssBoth
     TabOrder = 0
-    ExplicitLeft = 8
-    ExplicitTop = 285
-    ExplicitWidth = 1192
-    ExplicitHeight = 342
   end
   object Panel1: TPanel
     Left = 0
@@ -53,9 +49,6 @@ object frmTools: TfrmTools
     Height = 247
     Align = alTop
     TabOrder = 1
-    ExplicitLeft = 120
-    ExplicitTop = 32
-    ExplicitWidth = 1087
     object Splitter1: TSplitter
       Left = 417
       Top = 1
@@ -111,10 +104,6 @@ object frmTools: TfrmTools
       Height = 245
       Align = alClient
       TabOrder = 1
-      ExplicitLeft = 491
-      ExplicitTop = 36
-      ExplicitWidth = 246
-      ExplicitHeight = 144
       object Splitter2: TSplitter
         Left = 1
         Top = 82
@@ -161,9 +150,6 @@ object frmTools: TfrmTools
     Height = 29
     Caption = 'ToolBar1'
     TabOrder = 2
-    ExplicitLeft = 312
-    ExplicitTop = 8
-    ExplicitWidth = 150
     object Button1: TButton
       Left = 0
       Top = 0

@@ -53,6 +53,7 @@ void CToolCase::dbg_commu_test()
 
 void CToolCase::report_tool_list()
 {
+	printf("CToolCase::report_tool_list called\n");
 	if (m_FrameGenToPC.Begin(g_USART2_tx_buf, USART2_TX_BUF_SIZE))
 	{
 		TOOL_t tool;
@@ -156,7 +157,7 @@ void CFrameGen::End(CmdCode cmd_code, uint8_t info_type)
 		
 		{//补充校验域
 		uint8_t check_sum = m_PtrBufRef[1];
-		for(uint16_t i = 2; i <= m_RearIndex; i++)
+		for(uint16_t i = 2; i <= m_RearIndex - 1; i++)
 		{
 			check_sum += m_PtrBufRef[i];			
 		}

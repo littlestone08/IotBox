@@ -11,7 +11,7 @@
 #endif
 
 namespace TOOLCASE{
-	
+
 
 typedef enum {tcsUnkown = 0, tcsOpen, tcsClose} ToolCaseStatusDef;
 

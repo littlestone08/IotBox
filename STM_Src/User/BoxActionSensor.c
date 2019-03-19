@@ -94,7 +94,7 @@ void KEY_Dec(void)
 #define TIMER_ROUTE()
 #define KEY_DOWN_ACTION() 	(printf("S2 DOWN\n"), os_evt_set(0x0001, id_rfid_check), set_toolcase_status(1))
 
-#define KEY_UP_ACTION()			(printf("S2   UP\n"), os_evt_set(0x0001, id_rfid_check), set_toolcase_status(0))
+#define KEY_UP_ACTION()			(printf("S2   UP\n"), os_evt_set(0x0001, id_rfid_check), set_toolcase_status(2))
 
 	
 SCAN_KEY(KEY_S2_DETERMINE_EXP(), KEY_DOWN_ACTION(),KEY_UP_ACTION(), TIMER_ROUTE());

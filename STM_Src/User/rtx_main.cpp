@@ -10,10 +10,10 @@
 
 
 /*
-BB 01 00 00 2F 00 03 CB 30 00 E2 00 00 1A 
-92 10 01 08 27 40 4B A6 C3 30 00 E2 00 00 
-1A 92 10 01 36 27 30 65 90 C0 30 00 E2 00 
-00 1A 92 10 01 51 27 30 7F 2B 87 7E 
+BB 01 00 00 2F 01 03 
+C7 30 00 E2 00 00 1A 92 10 01 97 26 80 B2 EA 
+C3 30 00 E2 00 00 1A 92 10 02 18 26 90 C3 85 
+BC 30 00 E2 00 00 1A 92 10 01 64 27 30 88 8E A8 7E  
 */
 
 using namespace TOOLCASE;
@@ -81,14 +81,17 @@ __task void led_key( void ){
 __task void rfid_check( void ){
 	while(1){
 		if (os_evt_wait_or(0x0003, 1000) == OS_R_EVT){
+			//os_evt_clr(os_evt_get(), id_rfid_check);
 			//case triggered(open or closed)
 			if (pToolCase != NULL){
 				if (pToolCase->getStatus( ) ==  tcsOpen){
 					bool closed = false;
-					printf("ToolCase Opened, I will Check The ToolList 5 times Per 10 Sec\n");
+					printf("event status: %d\n", os_evt_get());
+					printf("ToolCase Opened(%d), I will Check The ToolList 5 times Per 10 Sec\n", 
+						pToolCase->getStatus());
 					{						
 						for(uint8_t i = 0; i < 5; i++){
-							printf("CheckTool List: %d, status: %d\n", i, os_evt_get());
+							printf("CheckTool List: %d, event status: %d, box status: %d\n", i, os_evt_get(), pToolCase->getStatus());
 							pToolCase->refresh_tools( );							
 							pToolCase->report_tool_list( );
 							for(uint8_t j = 0; j < 10; j++){
@@ -99,14 +102,18 @@ __task void rfid_check( void ){
 								}
 							}
 							if (closed){
-								printf("ToolCase Closed during OPENCHECKING\n");
+								printf("ToolCase Closed during opening checking\n");
 								break;
 							}
 						}
 					}
 				}
 				else if (pToolCase->getStatus( ) ==  tcsClose){
-					printf("ToolCase Closed, I will Check The ToolList 1 Time immediately, , status: %d\n",  os_evt_get());
+					printf("event status: %d\n", os_evt_get());
+					printf("ToolCase Closed(%d), I will Check The ToolList 1 Time immediately\n",  
+						pToolCase->getStatus());
+					pToolCase->refresh_tools( );							
+					pToolCase->report_tool_list( );					
 				}
 			}
 		}

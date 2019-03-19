@@ -158,7 +158,7 @@ end;
 
 procedure TfrmTools.FormShow(Sender: TObject);
 begin
-  self.ReDrawTools();
+   self.ReDrawTools();
 end;
 
 procedure TfrmTools.ParserDevInfo(DevId: PWideChar; pData: PByte;
@@ -315,16 +315,18 @@ procedure TfrmTools.ReDrawTools;
     end
     else
     begin
+    //'¨w¡Ì'
       if SecondSpan(ToolScanTime, BoxScanTime) > 2 then
       begin
-        Result:= 'ÒÑÄÃ³ö'
+        Result:= '¨w'
       end
       else
-        Result:= 'Î´ÄÃ³ö';
+        Result:= '¡Ì';
     end;
   end;
 var
-  BoxScanTime: TDateTime;
+  //BoxScanTime: TDateTime;
+  VBoxScanTime: Variant;
   BoxCommTime: TDateTime;
 begin
   With dmDatabase do
@@ -336,7 +338,7 @@ begin
       while not fdmBoxes.Eof do
       begin
         BoxCommTime:= fdmBoxes.FieldValues['LastCommTime'];
-        BoxScanTime:= fdmBoxes.FieldValues['LastScanTime'];
+        VBoxScanTime:= fdmBoxes.FieldValues['LastScanTime'];
         UpdateBox(fdmBoxes.FieldValues['id'],
                   fdmBoxes.FieldValues['iden'],
                   fdmBoxes.FieldValues['Name'],
@@ -350,7 +352,7 @@ begin
                       fdmTools.FieldValues['bid'],
                       fdmTools.FieldValues['iden'],
                       fdmTools.FieldValues['Name'],
-                      ToolState(BoxCommTime, BoxScanTime,
+                      ToolState(BoxCommTime, VBoxScanTime,
                             fdmTools.FieldValues['LastScanTime'])
           );
           fdmTools.Next;
