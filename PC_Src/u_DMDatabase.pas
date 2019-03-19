@@ -316,6 +316,10 @@ begin
     if Not(fdqModify.State in [dsEdit, dsInsert]) then
     begin
       fdqModify.Edit;
+      if ScanTime then
+      begin //只有是扫描状态下，箱子状态才是有效的
+        fdqModify.FieldByName('Status').Value := BoxStatus;
+      end;
     end;
 
     if CommTime then

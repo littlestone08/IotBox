@@ -11,8 +11,8 @@ object frmTools: TfrmTools
   Font.Name = #23435#20307
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -159,8 +159,17 @@ object frmTools: TfrmTools
       TabOrder = 0
       OnClick = Button1Click
     end
-    object Button2: TButton
+    object btnDiscon: TButton
       Left = 75
+      Top = 0
+      Width = 75
+      Height = 22
+      Caption = #26029#24320#36830#25509
+      TabOrder = 4
+      OnClick = btnDisconClick
+    end
+    object Button2: TButton
+      Left = 150
       Top = 0
       Width = 75
       Height = 22
@@ -169,7 +178,7 @@ object frmTools: TfrmTools
       OnClick = Button2Click
     end
     object Button3: TButton
-      Left = 150
+      Left = 225
       Top = 0
       Width = 88
       Height = 22
@@ -178,7 +187,7 @@ object frmTools: TfrmTools
       OnClick = Button3Click
     end
     object Button4: TButton
-      Left = 238
+      Left = 313
       Top = 0
       Width = 75
       Height = 22

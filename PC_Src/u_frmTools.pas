@@ -25,14 +25,16 @@ type
     ToolBar1: TToolBar;
     Splitter3: TSplitter;
     Timer1: TTimer;
+    btnDiscon: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure btnDisconClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -136,14 +138,7 @@ begin
   end;
 end;
 
-procedure TfrmTools.FormCreate(Sender: TObject);
-begin
-  self.lvBoxes.Clear;
-  DBGrid1.DataSource.DataSet.Open;
-  DBGrid2.DataSource.DataSet.Open;
-end;
-
-procedure TfrmTools.FormDestroy(Sender: TObject);
+procedure TfrmTools.btnDisconClick(Sender: TObject);
 begin
   if FConnected then
   begin
@@ -155,6 +150,17 @@ begin
   end;
 end;
 
+procedure TfrmTools.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  self.btnDisconClick(Nil);
+end;
+
+procedure TfrmTools.FormCreate(Sender: TObject);
+begin
+  self.lvBoxes.Clear;
+  DBGrid1.DataSource.DataSet.Open;
+  DBGrid2.DataSource.DataSet.Open;
+end;
 
 procedure TfrmTools.FormShow(Sender: TObject);
 begin
