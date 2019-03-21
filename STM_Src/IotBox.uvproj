@@ -218,7 +218,7 @@
             <RoSelD>3</RoSelD>
             <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
-            <OptFeed>1</OptFeed>
+            <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
             <NoZi2>0</NoZi2>
             <NoZi3>0</NoZi3>
@@ -349,7 +349,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls>--exceptions</MiscControls>
-              <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,HSE_VALUE=8000000</Define>
+              <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,HSE_VALUE=8000000,_DMSTM_BOARD</Define>
               <Undefine></Undefine>
               <IncludePath>.\User;.\FWLib\inc;.\User\CQ;.\User\ToolCase</IncludePath>
             </VariousControls>

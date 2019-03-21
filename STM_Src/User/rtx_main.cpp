@@ -29,15 +29,23 @@ __task void tsk_dbg_command( void ){
 		static bool led_value = false;
 		os_dly_wait (500);
 		if (led_value){
+			#ifdef DMSTM_BOARD
 			GPIO_SetBits(GPIOC, GPIO_Pin_7);	
+			#else
+			GPIO_SetBits(GPIOC, GPIO_Pin_13); 				
+			#endif
 		}
 		else{
+			#ifdef DMSTM_BOARD
 			GPIO_ResetBits(GPIOC, GPIO_Pin_7);	
+			#else
+			GPIO_ResetBits(GPIOC, GPIO_Pin_13); 				
+			#endif
 		}
 		led_value = !led_value;
 		
 		//printf("sec : %d\n", nSecTick++);
-						
+
 		while(CQ1_COUNT( ) > 0){				
 			switch(CQ1(0)){
 				case 'o':
@@ -81,7 +89,7 @@ __task void led_key( void ){
 __task void rfid_check( void ){
 	while(1){
 		if (os_evt_wait_or(0x0003, 1000) == OS_R_EVT){
-			//os_evt_clr(os_evt_get(), id_rfid_check);
+			os_evt_clr(os_evt_get(), id_rfid_check);
 			//case triggered(open or closed)
 			if (pToolCase != NULL){
 				if (pToolCase->getStatus( ) ==  tcsOpen){
@@ -140,7 +148,8 @@ CToolCase ToolCase;
 int main(void)
 {
 	InitCPU( );
-	
+	LED_KEY_Init();
+	SensorSWInit( );	
 //	g_USART3_tx_buf[0] = 0x01;
 //	g_USART3_tx_buf[1] = 0x02;
 //	g_USART3_tx_buf[2] = 0x03;
@@ -160,8 +169,7 @@ int main(void)
 	ToolCase.print_version();
 
 
-	LED_KEY_Init();
-	SensorSWInit( );	
+	
 	printf("-----------Hello from  IotToolCase, good luck...-----------\n");
 	
 	pToolCase->dbg_commu_test();
