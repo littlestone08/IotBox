@@ -97,7 +97,7 @@ __task void rfid_check( void ){
 					printf("event status: %d\n", os_evt_get());
 					printf("ToolCase Opened(%d), I will Check The ToolList 5 times Per 10 Sec\n", 
 						pToolCase->getStatus());
-					{						
+					{
 						for(uint8_t i = 0; i < 5; i++){
 							printf("CheckTool List: %d, event status: %d, box status: %d\n", i, os_evt_get(), pToolCase->getStatus());
 							pToolCase->refresh_tools( );							

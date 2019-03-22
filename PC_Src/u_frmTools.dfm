@@ -94,6 +94,7 @@ object frmTools: TfrmTools
         17FFFFFFFF}
       GroupView = True
       ReadOnly = True
+      RowSelect = True
       TabOrder = 0
       ViewStyle = vsReport
     end
